@@ -1,12 +1,12 @@
-import  { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { UserContext } from '../UserContext';
 
 export default function AddEvent() {
   const {user} = useContext(UserContext);
   const [formData, setFormData] = useState({
-
-    owner: user? user.name : "",
+    owner: "",
+    ownerName: "",
     title: "",
     optional:"",
     description: "",
@@ -18,6 +18,16 @@ export default function AddEvent() {
     image: '',
     likes: 0
   });
+
+  useEffect(() => {
+    if (!user) return;
+
+    setFormData((prevState) => ({
+      ...prevState,
+      owner: user._id,
+      ownerName: user.name,
+    }));
+  }, [user]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -35,8 +45,21 @@ export default function AddEvent() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!user?._id) {
+      console.error("Cannot create event without a logged-in user.");
+      return;
+    }
+
+    const payload = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== "") {
+        payload.append(key, value);
+      }
+    });
+
     axios
-      .post("/createEvent", formData)
+      .post("/createEvent", payload)
       .then((response) => {
         console.log("Event posted successfully:", response.data);
         

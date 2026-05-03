@@ -17,6 +17,9 @@ import OrderSummary from './pages/OrderSummary'
 import PaymentSummary from './pages/PaymentSummary'
 import TicketPage from './pages/TicketPage'
 import CreatEvent from './pages/CreateEvent'
+import MyEventsPage from "./pages/MyEventsPage"; // adjust path as needed
+
+// inside your <Routes>:
 
 axios.defaults.baseURL = 'http://localhost:4000/';
 axios.defaults.withCredentials=true;
@@ -29,6 +32,7 @@ function App() {
       <Route path='/' element={<Layout />}>
         <Route index element = {<IndexPage />} />
         <Route path='/useraccount' element = {<UserAccountPage />}/>
+        <Route path="/myevents" element={<MyEventsPage />} />
         <Route path='/createEvent' element = {<AddEvent/>} />
         <Route path='/event/:id' element= {<EventPage/>} />
         <Route path='/calendar' element={<CalendarView />} />

@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-key */
+ 
 import axios from "axios";
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
@@ -99,7 +99,7 @@ import { BiLike } from "react-icons/bi";
                 <div className="text-xs flex flex-col flex-wrap truncate-text">{event.description}</div>
                 <div className="flex justify-between items-center my-2 mr-4">
                   <div className="text-sm text-primarydark ">Organized By: <br /><span className="font-bold">{event.organizedBy}</span></div>
-                  <div className="text-sm text-primarydark ">Created By: <br/> <span className="font-semibold">{event.owner.toUpperCase()}</span></div>
+                  <div className="text-sm text-primarydark ">Created By: <br/> <span className="font-semibold">{(event.ownerName || event.owner || "").toUpperCase()}</span></div>
                 </div>
                 <Link to={'/event/'+event._id} className="flex justify-center">
                   <button className="primary flex items-center gap-2">Book Ticket< BsArrowRightShort className="w-6 h-6" /></button>

@@ -1,8 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+@theme {
+  --color-background: #fafafa;
+  --color-primary: #006ce6;
+  --color-secondary: #d1d5d8;
+  --color-primarydark: #0054b3;
+  --color-primarylight: #cae1fa;
+}
 
 body{
   background-color: #fafafa;
@@ -10,16 +15,58 @@ body{
 }
 
 button.primary{
-  @apply text-white py-2 px-4 bg-primary cursor-pointer ring-1 ring-primary rounded font-bold hover:bg-white hover:shadow-lg duration-75 hover:ring-primarydark hover:text-primary;
+  background-color: #006ce6;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 0 1px #006ce6;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  transition-duration: 75ms;
 }
+
+button.primary:hover{
+  background-color: white;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1), 0 0 0 1px #0054b3;
+  color: #006ce6;
+}
+
 button.secondary{
-  @apply flex items-center gap-2 text-primary py-2 px-4 bg-primarylight cursor-pointer ring-1 font-bold ring-primarylight rounded  hover:bg-primarydark hover:shadow-lg duration-75 hover:ring-primarydark hover:text-white;
+  align-items: center;
+  background-color: #cae1fa;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 0 1px #cae1fa;
+  color: #006ce6;
+  cursor: pointer;
+  display: flex;
+  font-weight: 700;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  transition-duration: 75ms;
 }
+
+button.secondary:hover{
+  background-color: #0054b3;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1), 0 0 0 1px #0054b3;
+  color: white;
+}
+
 div.input{
-  @apply flex bg-background rounded w-full py-2.5 px-4 gap-4 items-center ;
+  align-items: center;
+  background-color: #fafafa;
+  border-radius: 0.25rem;
+  display: flex;
+  gap: 1rem;
+  padding: 0.625rem 1rem;
+  width: 100%;
 }
+
 input.input-et{
-  @apply text-base bg-inherit text-black outline-none w-full;
+  background: inherit;
+  color: black;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
 }
 
 .custom-list {

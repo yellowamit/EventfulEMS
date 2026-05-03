@@ -1,49 +1,93 @@
-# EventoEMS - Event Management System
+# EventfulEMS - Event Management System
 
-Introducing our Event Management System, a solution developed as part of our final year group project, designed to streamline campus event planning, registration, and ticket booking. I played a key role as the architect, creating the user interface where I incorporated modern design principles and prioritized user experience. We are developing the system using the MERN stack (MongoDB, Express.js, React.js, Node.js), and we are utilizing the agile Scrum methodology for efficient development.
+EventfulEMS is a MERN stack event management system for planning campus events, viewing upcoming events, booking tickets, and generating QR-coded tickets.
 
-**Skills:** *Figma · Ui/ux · React.js · MongoDB · Node.js · Express.js · Requirements Analysis · User Interface Design*
+## Features
 
-**Features**
-* Schedule a Event.
+* Schedule an event.
 * View upcoming events.
-* View the event calendar.
-* Getting approval for the events.
-* Ticket Booking for the event.
-* QR Code generation for receiving tickets.
+* View events in a calendar.
+* Book event tickets.
+* Generate QR codes for booked tickets.
+* View and delete user tickets.
 
-**Technologies Used**
-* ReactJs
-* NodeJs
-* ExpressJs
-* MongoDB
-* NPM (Node Package Manager)
-* JWT webtoken
-* QR code
+## Tech Stack
 
-**_Getting Started_**
+* React 19
+* Vite 8
+* Tailwind CSS 4
+* Node.js
+* Express 5
+* MongoDB Atlas
+* Mongoose 9
+* JWT authentication
+* QR code generation
 
-**Prerequisites**
-* Node.js and npm installed
-* MongoDB Database
+## Prerequisites
 
-**Instalaltion**
-1. Clone the repository to your local machine.
-2. Navigate to the project directory. use two terminal <br>
-    **Cd Client** - For Frontend <br>
-    **Cd api** - For Backend <br>
-3. Install server dependenciesfor both frontend and backend.
-4. Create a .env file in the root directory with the following content, and replace placeholders with your own values. <br>
-     MONGODB_URI=mongodb://localhost/your-database-name
-5. Start the server.<br>
-     **ems/api:** nodemon start<br>
-     if the command is not working use **PowerShell -ExecutionPolicy Bypass nodemon** this command.
-7. Start the Client:<br>
-      **ems/client:** npm run dev
+* Node.js 20 or newer
+* npm
+* A MongoDB Atlas connection string
 
-**The application should now be running. You can access it at http://localhost:5173**<br>
-**The Server is running on http://localhost:4000**
+## Environment Setup
 
-<h1>Thank You</h1>
+Create `api/.env` and add your MongoDB Atlas URL:
 
-![portfolio_1](https://github.com/Bilal025/EventoEMS/assets/95700674/001ddf1c-72b3-40bb-8e3e-975ae00ccee5)
+```env
+MONGO_URL=mongodb+srv://<username>:<password>@<cluster-url>/<database-name>?retryWrites=true&w=majority
+PORT=4000
+```
+
+The app currently expects the API on `http://localhost:4000` and the frontend on `http://localhost:5173`.
+
+## Install Dependencies
+
+Open one terminal for the backend:
+
+```bash
+cd api
+npm install
+```
+
+Open a second terminal for the frontend:
+
+```bash
+cd client
+npm install
+```
+
+## Run Locally
+
+Start the backend:
+
+```bash
+cd api
+npm run dev
+```
+
+Start the frontend:
+
+```bash
+cd client
+npm run dev
+```
+
+Then open `http://localhost:5173` in your browser.
+
+## Useful Commands
+
+Backend:
+
+```bash
+cd api
+npm start
+```
+
+Frontend:
+
+```bash
+cd client
+npm run lint
+npm run build
+npm run preview
+```

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import {IoMdArrowBack} from 'react-icons/io'
 import {RiDeleteBinLine} from 'react-icons/ri'
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { UserContext } from "../UserContext";
 
@@ -10,13 +10,12 @@ export default function TicketPage() {
   
     const [userTickets, setUserTickets] = useState([]);
   
-    useEffect(() => {
-      if (user) {
-        fetchTickets()
+    const fetchTickets = useCallback(async()=>{
+      if (!user) {
+        setUserTickets([]);
+        return;
       }
-    }, );
-  
-    const fetchTickets = async()=>{
+
       axios.get(`/tickets/user/${user._id}`)
           .then(response => {
             setUserTickets(response.data);
@@ -24,7 +23,11 @@ export default function TicketPage() {
           .catch(error => {
             console.error('Error fetching user tickets:', error);
           })
-    }
+    }, [user])
+
+    useEffect(() => {
+      fetchTickets()
+    }, [fetchTickets]);
   
     const deleteTicket = async(ticketId) => {
       try {
