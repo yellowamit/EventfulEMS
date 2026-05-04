@@ -1,40 +1,48 @@
  
 import { Link, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
+import { UserContext } from "../UserContext";
+import { playTone } from "../utils/sound";
 
 export default function RegisterPage() {
+  const {setUser} = useContext(UserContext);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [redirect, setRedirect] = useState('');
+  const [message, setMessage] = useState(null);
   
 
   async function registerUser(ev){
     ev.preventDefault();
 
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      playTone("error");
+      setMessage({ type: "error", text: "Passwords do not match." });
       return;
     }
 
     try{
-      await axios.post('/register', {
+      const {data} = await axios.post('/register', {
         name,
         email,
         password,
         
       });
-      alert('Registration Successful')
-      setRedirect(true)
-    }catch{
-      alert('Registration failed')
+      setUser(data);
+      playTone("success");
+      setMessage({ type: "success", text: `Welcome, ${data.name}. You are logged in.` });
+      setTimeout(() => setRedirect(true), 900);
+    }catch(error){
+      playTone("error");
+      setMessage({ type: "error", text: error.response?.data?.error || "Registration failed. Try another email." });
     }
   }
 
   if (redirect){
-    return <Navigate to={'/login'} />
+    return <Navigate to={'/'} />
   }
 
   return (
@@ -58,6 +66,13 @@ export default function RegisterPage() {
     
         <form className="flex flex-col w-auto items-center" onSubmit={registerUser}>
             <h1 className='px-3 font-extrabold mb-5 text-primarydark text-2xl'>Sign Up</h1>
+            {message && (
+              <div className={`mb-4 w-full rounded-md p-3 text-sm font-semibold ${
+                message.type === "success" ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"
+              }`}>
+                {message.text}
+              </div>
+            )}
 
             <div className= "input">
               {/* <img src={account} alt="Name" className="name"/> */}

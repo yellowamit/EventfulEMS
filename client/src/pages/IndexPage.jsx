@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 import { BsArrowRightShort } from "react-icons/bs";
 import { BiLike } from "react-icons/bi";
+import { eventImageUrl } from "../utils/media";
 
   export default function IndexPage() {
     const [events, setEvents] = useState([]);
@@ -60,29 +61,24 @@ import { BiLike } from "react-icons/bi";
           //! Check the event date is passed or not --------------------------------------------------------------------------------------- 
           if (eventDate > currentDate || eventDate.toDateString() === currentDate.toDateString()){
             return (
-              <div className="bg-white rounded-xl relative" key={event._id}>
-              <div className='rounded-tl-[0.75rem] rounded-tr-[0.75rem] rounded-br-[0] rounded-bl-[0] object-fill aspect-16:9'>
-              {event.image && (
+              <div className="bg-white rounded-lg relative overflow-hidden shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl dark:bg-slate-900" key={event._id}>
+              <div className='relative h-48 overflow-hidden bg-slate-200 dark:bg-slate-800'>
+              {event.image ? (
                 <img
-                  src={`http://localhost:4000/api/${event.image}`}
+                  src={eventImageUrl(event.image)}
                   alt={event.title}
-                  width="300" 
-                  height="200" 
-                  className="w-full h-full"
+                  className="h-full w-full object-cover"
                 />
+              ) : (
+                <div className="flex h-full items-center justify-center text-sm font-semibold text-slate-500">No event image</div>
               )}
-                <div className="absolute flex gap-4 bottom-[240px] right-8 md:bottom-[20px] md:right-3 lg:bottom-[250px] lg:right-4 sm:bottom-[260px] sm:right-3">
+                <div className="absolute right-3 top-3 flex gap-4">
                 <button onClick={() => handleLike(event._id)}>
                   <BiLike className="w-auto h-12 lg:h-10 sm:h-12 md:h-10 bg-white p-2 rounded-full shadow-md transition-all hover:text-primary" />
                 </button>
               
                 </div>
               </div>
-
-                
-
-                <img src="../src/assets/paduru.png" alt="" className='rounded-tl-[0.75rem] rounded-tr-[0.75rem] rounded-br-[0] rounded-bl-[0] object-fill aspect-16:9'/> 
-    {/* FIXME: This is a demo image after completing the create event function delete this */}
 
               <div className="m-2 grid gap-2">
                 <div className="flex justify-between items-center">
@@ -97,6 +93,14 @@ import { BiLike } from "react-icons/bi";
                 </div>
 
                 <div className="text-xs flex flex-col flex-wrap truncate-text">{event.description}</div>
+                {!!event.Quantity && (
+                  <div className="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                    <div
+                      className="h-full rounded-full bg-emerald-500 transition-all"
+                      style={{ width: `${Math.min(((event.Count || 0) / event.Quantity) * 100, 100)}%` }}
+                    />
+                  </div>
+                )}
                 <div className="flex justify-between items-center my-2 mr-4">
                   <div className="text-sm text-primarydark ">Organized By: <br /><span className="font-bold">{event.organizedBy}</span></div>
                   <div className="text-sm text-primarydark ">Created By: <br/> <span className="font-semibold">{(event.ownerName || event.owner || "").toUpperCase()}</span></div>

@@ -18,6 +18,7 @@ import PaymentSummary from './pages/PaymentSummary'
 import TicketPage from './pages/TicketPage'
 import CreatEvent from './pages/CreateEvent'
 import MyEventsPage from "./pages/MyEventsPage"; // adjust path as needed
+import VerificationCenter from './pages/VerificationCenter'
 
 // inside your <Routes>:
 
@@ -36,6 +37,7 @@ function App() {
         <Route path='/createEvent' element = {<AddEvent/>} />
         <Route path='/event/:id' element= {<EventPage/>} />
         <Route path='/calendar' element={<CalendarView />} />
+        <Route path='/verification' element={<VerificationCenter />} />
         <Route path='/wallet' element={<TicketPage />}/>
         <Route path='/event/:id/ordersummary' element = {<OrderSummary />} />
       </Route>
