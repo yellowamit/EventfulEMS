@@ -105,7 +105,6 @@ app.post("/logout", (req, res) => {
 
 const eventSchema = new mongoose.Schema({
   owner: String,
-  ownerName: String,
   title: String,
   description: String,
   organizedBy: String,
@@ -184,23 +183,6 @@ app.get("/event/:id/ordersummary", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch event from MongoDB" });
   }
 });
-//my events for user
-app.get("/events/user/:userId", async (req, res) => {
-  try {
-    const user = await UserModel.findById(req.params.userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    const events = await Event.find({
-      $or: [{ owner: req.params.userId }, { ownerName: user.name }],
-    });
-    res.status(200).json(events);
-  } catch (error) {
-    console.error("Error fetching user events:", error);
-    res.status(500).json({ error: "Failed to fetch user events" });
-  }
-});
 
 app.get("/event/:id/ordersummary/paymentsummary", async (req, res) => {
   try {
@@ -247,38 +229,7 @@ app.delete("/tickets/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to delete ticket" });
   }
 });
-app.delete("/event/:id", async (req, res) => {
-  const { token } = req.cookies;
 
-  if (!token) {
-    return res.status(401).json({ error: "Not authenticated" });
-  }
-
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) return res.status(401).json({ error: "Invalid token" });
-
-    try {
-      const event = await Event.findById(req.params.id);
-
-      if (!event) {
-        return res.status(404).json({ error: "Event not found" });
-      }
-
-      // ✅ Check ownership on the server — can't be bypassed from the frontend
-      if (event.owner !== userData.id && event.ownerName !== userData.name) {
-        return res.status(403).json({ error: "You are not authorized to delete this event" });
-      }
-
-      await Event.findByIdAndDelete(req.params.id);
-      await Ticket.deleteMany({ eventId: req.params.id });
-
-      res.status(200).json({ message: "Event deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting event:", error);
-      res.status(500).json({ error: "Failed to delete event" });
-    }
-  });
-});
 const PORT = process.env.PORT || 4000;
 
 // ✅ Atlas-compatible connection with timeout option
