@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom"
 import { AiFillCalendar } from "react-icons/ai";
 import { MdLocationPin } from "react-icons/md";
 import { FaCopy, FaWhatsappSquare, FaFacebook } from "react-icons/fa";
+import { eventImageUrl } from "../utils/media";
 
 export default function EventPage() {
   const {id} = useParams();
@@ -45,14 +46,13 @@ export default function EventPage() {
 if (!event) return '';
   return (
     <div className="flex flex-col mx-5 xl:mx-32 md:mx-10 mt-5 flex-grow">
-     <div >
-        {event.image &&(
-          <img src={`${event.image}`} alt="" height="500px" width="1440px" className='rounded object-fill aspect-16:9'/>
+     <div className="h-[260px] overflow-hidden rounded-lg bg-slate-200 shadow-sm md:h-[440px] dark:bg-slate-800">
+        {event.image ? (
+          <img src={eventImageUrl(event.image)} alt={event.title} className='h-full w-full object-cover'/>
+        ) : (
+          <div className="flex h-full items-center justify-center font-semibold text-slate-500">No image uploaded for this event</div>
         )}
       </div>
-
-      <img src="../src/assets/paduru.png" alt="" className='rounded object-fill aspect-16:9'/> 
-      {/* FIXME: This is a demo image after completing the create event function delete this */}
 
       <div className="flex justify-between mt-8 mx-2">
           <h1 className="text-3xl md:text-5xl font-extrabold">{event.title.toUpperCase()}</h1>

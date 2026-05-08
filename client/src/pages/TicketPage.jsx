@@ -41,7 +41,7 @@ export default function TicketPage() {
     }
   
     return (
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col flex-grow bg-slate-50 dark:bg-slate-950">
       <div className="mb-5 flex justify-between place-items-center">
         <div>
           <Link to='/'>
@@ -77,24 +77,25 @@ export default function TicketPage() {
         </div>
         
         </div>
-        <div className="mx-12 grid grid-cols-1 xl:grid-cols-2 gap-5">
+        <div className="mx-6 mb-10 grid grid-cols-1 gap-5 md:mx-12 xl:grid-cols-2">
+        {userTickets.length === 0 && (
+          <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+            Your wallet is empty. Book an event and your ticket will appear here.
+          </div>
+        )}
           
         {userTickets.map(ticket => (
           
-        <div key={ticket._id} >
-          <div className="">
-            
-            <div className="h-48 mt-2 gap-2 p-5 bg-gray-100 font-bold rounded-md relative">
-              <button onClick={()=>deleteTicket(ticket._id)} className="absolute cursor-pointer right-0 mr-2">
+        <div key={ticket._id} className="overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+            <div className="relative grid gap-5 p-5 md:grid-cols-[160px_1fr]">
+              <button onClick={()=>deleteTicket(ticket._id)} className="absolute right-3 top-3 cursor-pointer rounded-full p-2 hover:bg-red-50">
                 <RiDeleteBinLine className=" h-6 w-10 text-red-700 "/>
               </button>
-              <div className="flex justify-start place-items-center text-sm md:text-base font-normal">
-                
-                <div className=" h-148 w-148">
-                  <img src={ticket.ticketDetails.qr} alt="QRCode" className="aspect-square object-fill "/>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800">
+                  <img src={ticket.ticketDetails.qr} alt="QRCode" className="aspect-square w-full rounded-md object-contain"/>
                 </div>
-                <div className="ml-6 grid grid-cols-2 gap-x-6 gap-y-2">
-                  <div className="">
+                <div className="grid gap-3 text-sm md:grid-cols-2 md:text-base">
+                  <div className="md:col-span-2">
                     Event Name : <br /><span className=" font-extrabold text-primarydark">{ticket.ticketDetails.eventname.toUpperCase()}</span>
                   </div>
                   
@@ -105,20 +106,21 @@ export default function TicketPage() {
                     Name: <span className="font-extrabold text-primarydark">{ticket.ticketDetails.name.toUpperCase()}</span>
                   </div>
                   <div>
-                    Price: <span className="font-extrabold text-primarydark"> Rs. {ticket.ticketDetails.ticketprice}</span>
+                    Quantity: <span className="font-extrabold text-primarydark">{ticket.count || 1}</span>
+                  </div>
+                  <div>
+                    Price: <span className="font-extrabold text-primarydark"> Rs. {ticket.ticketDetails.totalPrice || ticket.ticketDetails.ticketprice}</span>
                   </div>
                   <div>
                     Email: <span className="font-extrabold text-primarydark">{ticket.ticketDetails.email}</span>
                   </div>
-                  <div>
-                    Ticket ID:<br /><span className="font-extrabold text-primarydark">{ticket.ticketDetails._id}</span>
+                  <div className="md:col-span-2">
+                    Ticket ID:<br /><span className="font-mono font-extrabold text-primarydark">{ticket.ticketCode || ticket._id}</span>
                   </div>
                 </div>
               </div>
               
             </div>
-          </div>
-          </div>
         
          ))}
          </div>

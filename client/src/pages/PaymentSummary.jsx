@@ -1,13 +1,16 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios';
 import  { useContext, useEffect, useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
 import {IoMdArrowBack} from 'react-icons/io'
 import { UserContext } from '../UserContext';
 import Qrcode from 'qrcode' //TODO:
+import { playTone } from '../utils/sound';
 
 export default function PaymentSummary() {
     const {id} = useParams();
+    const [searchParams] = useSearchParams();
+    const quantity = Math.min(Math.max(Number(searchParams.get("quantity") || 1), 1), 10);
     const [event, setEvent] = useState(null);
     const {user} = useContext(UserContext);
     const [details, setDetails] = useState({
@@ -27,7 +30,8 @@ export default function PaymentSummary() {
         eventtime: '',
         ticketprice: '',
         qr: '',
-      }
+      },
+      count: quantity,
     };
 //! add default state to the ticket details state
     const [ticketDetails, setTicketDetails] = useState(defaultTicketState);
@@ -38,7 +42,8 @@ export default function PaymentSummary() {
       expiryDate: '',
       cvv: '',
     });
-    const [redirect, setRedirect] = useState('');
+    const [createdTicket, setCreatedTicket] = useState(null);
+    const [error, setError] = useState("");
   
     useEffect(()=>{
       if(!id){
@@ -57,7 +62,8 @@ export default function PaymentSummary() {
             eventdate: response.data.eventDate.split("T")[0],
             eventtime: response.data.eventTime,
             ticketprice: response.data.ticketPrice,
-          }
+          },
+          count: quantity,
         }));
       }).catch((error) => {
         console.error("Error fetching events:", error);
@@ -72,12 +78,15 @@ export default function PaymentSummary() {
           ...prevTicketDetails.ticketDetails,
           name: user ? user.name : '',
           email: user ? user.email : '',
-        }
+        },
+        count: quantity,
       }));
-    }, [user]);
+    }, [user, quantity]);
     
     
+    if (!user) return <Navigate to="/login" />
     if (!event) return '';
+    const total = Number(event.ticketPrice || 0) * quantity;
 
     const handleChangeDetails = (e) => {
       const { name, value } = e.target;
@@ -101,7 +110,8 @@ export default function PaymentSummary() {
   try {
     const qrCode = await generateQRCode(
       ticketDetails.ticketDetails.eventname,
-      ticketDetails.ticketDetails.name
+      ticketDetails.ticketDetails.name,
+      quantity
     );
 //!updating the ticket details qr with prevoius details ------------------
     const updatedTicketDetails = {
@@ -109,23 +119,28 @@ export default function PaymentSummary() {
       ticketDetails: {
         ...ticketDetails.ticketDetails,
         qr: qrCode,
-      }
+        totalPrice: total,
+      },
+      count: quantity,
     };
 //!posting the details to backend ----------------------------
     const response = await axios.post(`/tickets`, updatedTicketDetails);
-    alert("Ticket Created");
-    setRedirect(true)
+    playTone("success");
+    setCreatedTicket(response.data.ticket);
+    setError("");
     console.log('Success creating ticket', updatedTicketDetails)
   } catch (error) {
+    playTone("error");
+    setError(error.response?.data?.error || "Error creating ticket");
     console.error('Error creating ticket:', error);
   }
 
 }
 //! Helper function to generate QR code ------------------------------
-async function generateQRCode(name, eventName) {
+async function generateQRCode(name, eventName, ticketCount) {
   try {
     const qrCodeData = await Qrcode.toDataURL(
-        `Event Name: ${name} \n Name: ${eventName}`
+        `Event Name: ${name} \n Name: ${eventName} \n Tickets: ${ticketCount}`
     );
     return qrCodeData;
   } catch (error) {
@@ -133,8 +148,21 @@ async function generateQRCode(name, eventName) {
     return null;
   }
 }
-if (redirect){
-  return <Navigate to={'/wallet'} />
+if (createdTicket){
+  return (
+    <div className="mx-auto mt-16 max-w-2xl rounded-lg border border-emerald-200 bg-white p-8 text-center shadow-xl dark:border-emerald-700 dark:bg-slate-900">
+      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl font-black text-emerald-700">✓</div>
+      <h1 className="text-3xl font-extrabold">Ticket confirmed</h1>
+      <p className="mt-3 text-slate-600 dark:text-slate-300">{quantity} ticket(s) booked for {createdTicket.ticketDetails.eventname}.</p>
+      <div className="mt-6 rounded-md bg-slate-100 p-4 font-mono text-lg font-bold text-primarydark dark:bg-slate-800">
+        {createdTicket.ticketCode}
+      </div>
+      <div className="mt-6 flex justify-center gap-3">
+        <Link to="/wallet"><button className="primary">View Wallet</button></Link>
+        <Link to="/"><button className="secondary">Browse Events</button></Link>
+      </div>
+    </div>
+  )
 }
     return (
       <>
@@ -246,15 +274,14 @@ if (redirect){
               />
             </div>
             <div className="float-right">
-            <p className="text-sm font-semibold pb-2 pt-8">Total : LKR. {event.ticketPrice}</p>
-            <Link to={'/'}>
+            <p className="text-sm font-semibold pb-2 pt-8">Total : LKR. {total}</p>
+            {error && <p className="max-w-sm pb-2 text-sm font-semibold text-red-600">{error}</p>}
               <button type="button" 
                 onClick = {createTicket}
                 className="primary">
                 
                
                 Make Payment</button>
-              </Link>
             </div>
             
           </div>
@@ -264,14 +291,14 @@ if (redirect){
           <div className="space-y-1">
             
             <div>
-               <p className="float-right">1 Ticket</p>
+               <p className="float-right">{quantity} Ticket(s)</p>
             </div>
             <p className="text-lg font-semibold">{event.title}</p>
             <p className="text-xs">{event.eventDate.split("T")[0]},</p>
             <p className="text-xs pb-2"> {event.eventTime}</p>
             <hr className=" my-2 border-t pt-2 border-gray-400" />
-            <p className="float-right font-bold">LKR. {event.ticketPrice}</p>
-            <p className="font-bold">Sub total: {event.ticketPrice}</p>
+            <p className="float-right font-bold">LKR. {total}</p>
+            <p className="font-bold">Sub total: {total}</p>
           </div>
           
         </div>

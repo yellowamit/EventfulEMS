@@ -7,6 +7,7 @@ export default function OrderSummary() {
     const {id} = useParams();
     const [event, setEvent] = useState(null);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
+    const [quantity, setQuantity] = useState(1);
   
     useEffect(()=>{
       if(!id){
@@ -25,6 +26,10 @@ export default function OrderSummary() {
     }
   
     if (!event) return '';
+    const hasStockLimit = Number(event.Quantity || 0) > 0;
+    const availableTickets = Math.max(Number(event.Quantity || 0) - Number(event.Count || 0), 0);
+    const maxSelectable = hasStockLimit ? Math.min(10, availableTickets) : 10;
+    const total = Number(event.ticketPrice || 0) * quantity;
     return (
       <div>
           <Link to={'/event/'+event._id}>
@@ -75,7 +80,7 @@ export default function OrderSummary() {
   
                                   <li> Tickets will be delivered to your registered email address as e-tickets. You can print the e-ticket or show it on your mobile device for entry to the event. </li>
   
-                                  <li> Each individual is allowed to purchase a maximum of 2 tickets for this event to ensure fair distribution. </li>
+                                  <li> Each individual is allowed to purchase a maximum of 10 tickets for this event to ensure fair distribution. </li>
   
                                   <li> In the rare event of cancellation or postponement, attendees will be notified via email. Refunds will be automatically processed for canceled events. </li>
   
@@ -108,11 +113,23 @@ export default function OrderSummary() {
                               <div className='text-left mt-5'>{event.title}</div>
                               <div className='text-right mt-5 mb-6 pr-5'>LKR. {event.ticketPrice}</div>
                         </div>
+                        <label className="mt-2 flex items-center justify-between text-sm font-bold">
+                          Tickets
+                          <input
+                            type="number"
+                            min="1"
+                            max={maxSelectable}
+                            value={quantity}
+                            onChange={(e) => setQuantity(Math.min(Math.max(Number(e.target.value || 1), 1), maxSelectable))}
+                            className="w-20 rounded border border-blue-200 bg-white p-2 text-right"
+                          />
+                        </label>
+                        <div className="mt-2 text-xs text-slate-600">{hasStockLimit ? availableTickets : "Limited"} ticket(s) available. Max 10 per person.</div>
                         
                         <hr className=" my-2 pt-2 border-gray-300" />
                         <div className='text-sm font-bold flex justify-between' >
                           <div className='text-left mt-5'>SUB TOTAL</div>
-                          <div className='text-right mt-5 mb-6 pr-5'>LKR. {event.ticketPrice}</div>
+                          <div className='text-right mt-5 mb-6 pr-5'>LKR. {total}</div>
                         </div>
                         <div className='flex justify-between'>
                           <input className='h-5 ' type='checkbox' onChange={handleCheckboxChange}/>
@@ -122,11 +139,11 @@ export default function OrderSummary() {
                         </div>
   
                         <div className='mb-5'>
-                                  <Link to={'/event/'+event._id+ '/ordersummary'+'/paymentsummary'}>
+                                  <Link to={`/event/${event._id}/ordersummary/paymentsummary?quantity=${quantity}`}>
                                     <button 
                                     className={`mt-5 p-3 ml-2 w-36 text-gray-100 items-center ${
-                                      isCheckboxChecked ? 'bg-blue-700' : 'bg-gray-300'} gap-2 rounded-md`}
-                                    disabled={!isCheckboxChecked}
+                                      isCheckboxChecked && maxSelectable > 0 ? 'bg-blue-700' : 'bg-gray-300'} gap-2 rounded-md`}
+                                    disabled={!isCheckboxChecked || maxSelectable < 1}
                                     >
                                       Proceed
                                     </button>

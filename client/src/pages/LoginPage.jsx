@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import axios from 'axios'
 import { UserContext } from '../UserContext'
+import { playTone } from '../utils/sound';
 
 
 export default function LoginPage() {
@@ -10,6 +11,7 @@ export default function LoginPage() {
   const [redirect, setRedirect] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [message, setMessage] = useState(null);
   const {setUser} = useContext(UserContext);
 
 
@@ -30,7 +32,8 @@ export default function LoginPage() {
       try{
         const {data} = await axios.post('/login', {email, password})
         setUser(data);
-        alert('Login success');
+        playTone("success");
+        setMessage({ type: "success", text: `Welcome back, ${data.name}. You are logged in.` });
 
         if (rememberMe) {
           // If the user checked, store their email in localStorage.
@@ -41,9 +44,10 @@ export default function LoginPage() {
           localStorage.removeItem('rememberedEmail');
         }
 
-        setRedirect(true)
-      }catch{
-        alert('Login failed');
+        setTimeout(() => setRedirect(true), 900);
+      }catch(error){
+        playTone("error");
+        setMessage({ type: "error", text: error.response?.data?.error || "Login failed. Check your email and password." });
       }
   }
 
@@ -57,6 +61,13 @@ export default function LoginPage() {
     
         <form className="flex flex-col w-auto items-center" onSubmit={loginUser}>
             <h1 className='px-3 font-extrabold mb-5 text-primarydark text-2xl '>Sign In</h1>
+            {message && (
+              <div className={`mb-4 w-full rounded-md p-3 text-sm font-semibold ${
+                message.type === "success" ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"
+              }`}>
+                {message.text}
+              </div>
+            )}
 
 
             <div className= "input">

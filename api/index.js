@@ -10,6 +10,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const Ticket = require("./models/Ticket");
+const { randomUUID } = require("crypto");
 
 const app = express();
 
@@ -62,7 +63,15 @@ app.post("/register", async (req, res) => {
       email,
       password: bcrypt.hashSync(password, bcryptSalt),
     });
-    res.json(userDoc);
+    jwt.sign(
+      { email: userDoc.email, id: userDoc._id },
+      jwtSecret,
+      {},
+      (err, token) => {
+        if (err) return res.status(500).json({ error: "Failed to generate token" });
+        res.cookie("token", token).json(userDoc);
+      }
+    );
   } catch (e) {
     res.status(422).json(e);
   }
@@ -93,8 +102,10 @@ app.get("/profile", (req, res) => {
 
   // ✅ Return error response instead of throwing
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) return res.status(401).json({ error: "Invalid token" });
-    const { name, email, _id } = await UserModel.findById(userData.id);
+    if (err) return res.clearCookie("token").status(401).json({ error: "Invalid token" });
+    const userDoc = await UserModel.findById(userData.id);
+    if (!userDoc) return res.clearCookie("token").json(null);
+    const { name, email, _id } = userDoc;
     res.json({ name, email, _id });
   });
 });
@@ -117,6 +128,7 @@ const eventSchema = new mongoose.Schema({
   ticketPrice: Number,
   Quantity: Number,
   image: String,
+  ownerName: String,
   likes: { type: Number, default: 0 }, // ✅ Default prevents NaN on likes += 1
   Comment: [String],
 });
@@ -126,7 +138,10 @@ const Event = mongoose.model("Event", eventSchema);
 app.post("/createEvent", upload.single("image"), async (req, res) => {
   try {
     const eventData = req.body;
-    eventData.image = req.file ? req.file.path : "";
+    eventData.image = req.file ? `/uploads/${req.file.filename}` : "";
+    eventData.Count = Number(eventData.Count || 0);
+    eventData.Quantity = Number(eventData.Quantity || eventData.Participants || 0);
+    eventData.ticketPrice = Number(eventData.ticketPrice || 0);
     const newEvent = new Event(eventData);
     await newEvent.save();
     res.status(201).json(newEvent);
@@ -151,6 +166,14 @@ app.get("/event/:id", async (req, res) => {
     res.json(event);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch event from MongoDB" });
+  }
+});
+app.delete("/event/:id", async (req, res) => {
+  try {
+    await Event.findByIdAndDelete(req.params.id);
+    res.json({ message: "Event deleted" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete event" });
   }
 });
 
@@ -192,17 +215,95 @@ app.get("/event/:id/ordersummary/paymentsummary", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch event from MongoDB" });
   }
 });
+app.get("/events/user/:userId", async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    
+    const events = await Event.find({ $or: [{ owner: user._id.toString() }, { owner: user.name }, { ownerName: user.name }] });
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch user events" });
+  }
+});
 
+// app.post("/tickets", async (req, res) => {
+//   try {
+//     const newTicket = new Ticket(req.body);
+//     await newTicket.save();
+//     return res.status(201).json({ ticket: newTicket });
+//   } catch (error) {
+//     return res.status(500).json({ error: "Failed to create ticket" });
+//   }
+// });
+// app.post("/tickets", async (req, res) => {
+//   try {
+//     const newTicket = new Ticket(req.body);
+//     await newTicket.save();
+
+//     // ✅ Increment Count on the event every time a ticket is bought
+//     await Event.findByIdAndUpdate(
+//       req.body.eventid,
+//       { $inc: { Count: req.body.count } }
+//     );
+
+//     return res.status(201).json({ ticket: newTicket });
+//   } catch (error) {
+//     return res.status(500).json({ error: "Failed to create ticket" });
+//   }
+// });
 app.post("/tickets", async (req, res) => {
   try {
-    const newTicket = new Ticket(req.body);
+    const userId = req.body.userid;
+    const eventId = req.body.eventid;
+    const count = Math.min(Math.max(Number(req.body.count || 1), 1), 10);
+
+    if (!userId || !eventId) {
+      return res.status(400).json({ error: "User and event are required" });
+    }
+
+    const event = await Event.findById(eventId);
+    if (!event) return res.status(404).json({ error: "Event not found" });
+
+    const existingTickets = await Ticket.find({ userid: userId, eventid: eventId });
+    const alreadyBought = existingTickets.reduce((total, ticket) => total + Number(ticket.count || 0), 0);
+    if (alreadyBought + count > 10) {
+      return res.status(400).json({
+        error: `Ticket limit reached. You can buy ${Math.max(10 - alreadyBought, 0)} more ticket(s) for this event.`,
+      });
+    }
+
+    const soldCount = Number(event.Count || 0);
+    const maxTickets = Number(event.Quantity || 0);
+    if (maxTickets > 0 && soldCount + count > maxTickets) {
+      return res.status(400).json({ error: "Not enough tickets are available for this event." });
+    }
+
+    const ticketCode = `EVE-${Date.now().toString(36).toUpperCase()}-${randomUUID().slice(0, 8).toUpperCase()}`;
+    const ticketPrice = Number(req.body.ticketDetails?.ticketprice || event.ticketPrice || 0);
+    const newTicket = new Ticket({
+      ...req.body,
+      count,
+      ticketCode,
+      ticketDetails: {
+        ...req.body.ticketDetails,
+        eventname: req.body.ticketDetails?.eventname || event.title,
+        eventdate: req.body.ticketDetails?.eventdate || event.eventDate,
+        eventtime: req.body.ticketDetails?.eventtime || event.eventTime,
+        ticketprice: ticketPrice,
+        totalPrice: ticketPrice * count,
+      },
+    });
     await newTicket.save();
+
+    event.Count = soldCount + count;
+    await event.save();
+
     return res.status(201).json({ ticket: newTicket });
   } catch (error) {
     return res.status(500).json({ error: "Failed to create ticket" });
   }
 });
-
 app.get("/tickets/:id", async (req, res) => {
   try {
     const tickets = await Ticket.find();
@@ -235,6 +336,7 @@ const PORT = process.env.PORT || 4000;
 // ✅ Atlas-compatible connection with timeout option
 mongoose
   .connect(process.env.MONGO_URL, {
+    dbName: process.env.MONGO_DB_NAME || "eventfulems",
     serverSelectionTimeoutMS: 5000, // Fail fast if Atlas is unreachable
   })
   .then(() => {

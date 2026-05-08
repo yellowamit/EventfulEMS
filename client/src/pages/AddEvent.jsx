@@ -15,9 +15,11 @@ export default function AddEvent() {
     eventTime: "",
     location: "",
     ticketPrice: 0,
+    Quantity: 100,
     image: '',
     likes: 0
   });
+  const [submittedEvent, setSubmittedEvent] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -62,6 +64,7 @@ export default function AddEvent() {
       .post("/createEvent", payload)
       .then((response) => {
         console.log("Event posted successfully:", response.data);
+        setSubmittedEvent(response.data);
         
       })
       .catch((error) => {
@@ -70,8 +73,13 @@ export default function AddEvent() {
   };
 
   return (
-    <div className='flex flex-col ml-20 mt-10'>
+    <div className='mx-auto mt-10 flex w-full max-w-5xl flex-col px-6'>
       <div><h1 className='font-bold text-[36px] mb-5'>Post an Event</h1></div>
+      {submittedEvent && (
+        <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 p-4 font-semibold text-emerald-800">
+          Event published: {submittedEvent.title}
+        </div>
+      )}
       
       <form onSubmit={handleSubmit} className='flex flex-co'>
       <div className='flex flex-col gap-5'>
@@ -151,6 +159,17 @@ export default function AddEvent() {
             name="ticketPrice"
             className=' rounded mt-2 pl-5 px-4 ring-sky-700 ring-2 h-8 border-none'
             value={formData.ticketPrice}
+            onChange={handleChange}
+          />
+        </label>
+        <label className='flex flex-col'>
+          Total Tickets:
+          <input
+            type="number"
+            name="Quantity"
+            min="1"
+            className=' rounded mt-2 pl-5 px-4 ring-sky-700 ring-2 h-8 border-none'
+            value={formData.Quantity}
             onChange={handleChange}
           />
         </label>
