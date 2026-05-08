@@ -4,7 +4,6 @@ import {Link} from "react-router-dom";
 import { UserContext } from "../UserContext";
 import { RxExit } from 'react-icons/rx';
 import { BsFillCaretDownFill } from 'react-icons/bs';
-import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { playTone } from "../utils/sound";
 
 
@@ -13,13 +12,34 @@ export default function Header() {
   const [isMenuOpen, setisMenuOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const [theme, setTheme] = useState(() => {
+    // First check localStorage for user preference
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme) return storedTheme;
+    
+    // If not in localStorage, detect system preference
+    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      return "dark";
+    }
+    return "light";
+  });
   const searchInputRef = useRef();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  //! Auto-detect system theme preference changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (e) => {
+      setTheme(e.matches ? "dark" : "light");
+    };
+    
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
 
   //! Fetch events from the server -------------------------------------------------
   useEffect(() => {
@@ -150,18 +170,6 @@ export default function Header() {
             </Link>
           </div>
           
-
-          <button
-            type="button"
-            onClick={() => {
-              playTone("tap");
-              setTheme((currentTheme) => currentTheme === "dark" ? "light" : "dark");
-            }}
-            className="rounded-full p-2 text-primary transition hover:bg-primarylight dark:text-primarylight dark:hover:bg-slate-800"
-            title="Toggle theme"
-          >
-            {theme === "dark" ? <MdLightMode className="h-5 w-5" /> : <MdDarkMode className="h-5 w-5" />}
-          </button>
 
           <div>
             <div className='flex flex-col place-items-center py-1 px-3 rounded cursor-pointer hover:text-primarydark hover:bg-white hover:shadow-sm shadow-gray-200 hover:transition-shadow duration-1500'>
