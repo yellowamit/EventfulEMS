@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage'
 import Layout from './Layout'
 import LoginPage from './pages/LoginPage'
 import axios from 'axios'
+import { API_BASE_URL } from './utils/api'
 import { UserContextProvider } from './UserContext'
 import UserAccountPage from './pages/UserAccountPage'
 import ForgotPassword from './pages/ForgotPassword'
@@ -22,7 +23,7 @@ import VerificationCenter from './pages/VerificationCenter'
 
 // inside your <Routes>:
 
-axios.defaults.baseURL = 'http://localhost:4000/';
+axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.withCredentials=true;
 
 function App() {

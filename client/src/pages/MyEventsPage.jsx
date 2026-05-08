@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillCalendar } from "react-icons/ai";
 import { MdLocationPin, MdDelete } from "react-icons/md";
+import { apiUrl } from "../utils/api";
+import { eventImageUrl } from "../utils/media";
 
 export default function MyEventsPage() {
   const [myEvents, setMyEvents] = useState([]);
@@ -40,7 +42,7 @@ export default function MyEventsPage() {
     if (!confirmed) return;
 
     try {
-      const response = await fetch(`http://localhost:4000/event/${eventId}`, {
+      const response = await fetch(apiUrl(`/event/${eventId}`), {
         method: "DELETE",
         credentials: "include",
       });
@@ -96,7 +98,7 @@ export default function MyEventsPage() {
               <div className="w-full md:w-48 h-36 flex-shrink-0">
                 {event.image ? (
                   <img
-                    src={`http://localhost:4000/${event.image}`}
+                    src={eventImageUrl(event.image)}
                     alt={event.title}
                     className="w-full h-full object-cover rounded-lg"
                   />

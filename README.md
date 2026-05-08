@@ -31,14 +31,16 @@ EventfulEMS is a MERN stack event management system for planning campus events, 
 
 ## Environment Setup
 
-Create `api/.env` and add your MongoDB Atlas URL:
+Create `api/.env` for local development:
 
 ```env
 MONGO_URL=mongodb+srv://<username>:<password>@<cluster-url>/<database-name>?retryWrites=true&w=majority
+JWT_SECRET=replace-with-a-long-random-secret
 PORT=4000
+CLIENT_ORIGIN=http://localhost:5173
 ```
 
-The app currently expects the API on `http://localhost:4000` and the frontend on `http://localhost:5173`.
+The frontend reads its API location from `VITE_API_BASE_URL`. If it is not set, local Vite dev uses `http://localhost:4000/api` and production uses `/api`.
 
 ## Install Dependencies
 
@@ -73,6 +75,28 @@ npm run dev
 ```
 
 Then open `http://localhost:5173` in your browser.
+
+## Deploy On Render
+
+This repo is ready for a single Render Web Service that serves both the Express API and the built React app.
+
+Use these settings:
+
+```bash
+Build Command: npm run render-build
+Start Command: npm start
+```
+
+Add these environment variables in Render:
+
+```env
+NODE_ENV=production
+MONGO_URL=mongodb+srv://<username>:<password>@<cluster-url>/<database-name>?retryWrites=true&w=majority
+JWT_SECRET=<long-random-secret>
+MONGO_DB_NAME=eventfulems
+```
+
+`render.yaml` is included, so Render can also create the service from the blueprint. For a separate frontend/backend deployment, set `VITE_API_BASE_URL` on the frontend to your backend URL ending in `/api`, and set `CLIENT_ORIGIN` on the backend to the frontend URL.
 
 ## Useful Commands
 
