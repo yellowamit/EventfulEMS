@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "install:all": "npm install --prefix api && npm install --prefix client",
+    "install:all": "npm install --prefix api && npm install --include=dev --prefix client",
     "build": "npm run build --prefix client",
     "start": "npm start --prefix api",
     "render-build": "npm run install:all && npm run build"
   },
   "engines": {
-    "node": ">=20"
+    "node": "20.x"
   }
 }
