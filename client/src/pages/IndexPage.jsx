@@ -61,8 +61,8 @@ import { eventImageUrl } from "../utils/media";
           //! Check the event date is passed or not --------------------------------------------------------------------------------------- 
           if (eventDate > currentDate || eventDate.toDateString() === currentDate.toDateString()){
             return (
-              <div className="bg-white rounded-lg relative overflow-hidden shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl dark:bg-slate-900" key={event._id}>
-              <div className='relative h-48 overflow-hidden bg-slate-200 dark:bg-slate-800'>
+              <div className="bg-white rounded-lg relative overflow-hidden shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl" key={event._id}>
+              <div className='relative h-48 overflow-hidden bg-slate-200'>
               {event.image ? (
                 <img
                   src={eventImageUrl(event.image)}
@@ -94,7 +94,7 @@ import { eventImageUrl } from "../utils/media";
 
                 <div className="text-xs flex flex-col flex-wrap truncate-text">{event.description}</div>
                 {!!event.Quantity && (
-                  <div className="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                  <div className="h-2 overflow-hidden rounded-full bg-slate-200">
                     <div
                       className="h-full rounded-full bg-emerald-500 transition-all"
                       style={{ width: `${Math.min(((event.Count || 0) / event.Quantity) * 100, 100)}%` }}

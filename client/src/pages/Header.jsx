@@ -12,33 +12,11 @@ export default function Header() {
   const [isMenuOpen, setisMenuOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [theme, setTheme] = useState(() => {
-    // First check localStorage for user preference
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme) return storedTheme;
-    
-    // If not in localStorage, detect system preference
-    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark";
-    }
-    return "light";
-  });
   const searchInputRef = useRef();
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  //! Auto-detect system theme preference changes
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e) => {
-      setTheme(e.matches ? "dark" : "light");
-    };
-    
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    document.documentElement.classList.remove("dark");
+    localStorage.removeItem("theme");
   }, []);
 
   //! Fetch events from the server -------------------------------------------------
@@ -82,12 +60,12 @@ export default function Header() {
 
   return (
     <div>
-      <header className='sticky top-0 z-20 flex justify-between place-items-center border-b border-slate-200 bg-white/90 px-6 py-2 backdrop-blur sm:px-6 dark:border-slate-800 dark:bg-slate-950/90'>
+      <header className='sticky top-0 z-20 flex justify-between place-items-center border-b border-slate-200 bg-white/90 px-6 py-2 backdrop-blur sm:px-6'>
           
           <Link to={'/'} className="flex item-center ">
             <img src="../src/assets/logo.png" alt="" className='w-26 h-9'/>
           </Link>
-          <div  className='flex bg-white rounded py-2.5 px-4 w-1/3 gap-4 items-center shadow-md shadow-gray-200 dark:bg-slate-900 dark:shadow-none'>
+          <div  className='flex bg-white rounded py-2.5 px-4 w-1/3 gap-4 items-center shadow-md shadow-gray-200'>
             
             <button>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
@@ -95,7 +73,7 @@ export default function Header() {
               </svg>
             </button>
             <div ref={searchInputRef}>
-              <input type="text" placeholder="Search" value={searchQuery} onChange={handleSearchInputChange} className='text-sm text-black outline-none w-full dark:bg-slate-900 dark:text-white'/>
+              <input type="text" placeholder="Search" value={searchQuery} onChange={handleSearchInputChange} className='text-sm text-black outline-none w-full'/>
             </div>
             {/* <div className='text-sm text-gray-300 font-semibold'>Search</div> */}      
           </div> 
@@ -121,7 +99,7 @@ export default function Header() {
     
           
           <Link to={'/createEvent'}> {/*TODO:Route create event page after creating it */}
-            <div className='hidden md:flex flex-col place-items-center py-1 px-2 rounded text-primary cursor-pointer hover:text-primarydark hover:bg-white hover:shadow-sm shadow-gray-200 hover:transition-shadow duration-1500'>
+            <div className='hidden md:flex flex-col  place-items-center py-1 px-2 rounded text-primary cursor-pointer hover:text-primarydark hover:bg-white hover:shadow-sm shadow-gray-200 hover:transition-shadow duration-1500'>
               <button>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 stroke-3 py-1">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -215,7 +193,7 @@ export default function Header() {
           {/* -------------------IF user is Logged DO this Mobile -------------------- */}
           {!!user &&(
             //w-auto flex flex-col absolute bg-white pl-2 pr-6 py-5 gap-4 rounded-xl
-            <div className="absolute z-10 mt-64 flex flex-col w-48 bg-white right-2 md:right-[160px] rounded-lg shadow-lg dark:bg-slate-900"> 
+            <div className="absolute z-10 mt-64 flex flex-col w-48 bg-white right-2 md:right-[160px] rounded-lg shadow-lg"> 
             {/* TODO: */}
               <nav className={`block ${isMenuOpen ? 'block' : 'hidden'} `}>
                 <div className="flex flex-col font-semibold text-[16px]">

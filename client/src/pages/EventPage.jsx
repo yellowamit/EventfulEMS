@@ -10,6 +10,7 @@ import { eventImageUrl } from "../utils/media";
 export default function EventPage() {
   const {id} = useParams();
   const [event, setEvent] = useState(null);
+  const [message, setMessage] = useState(null);
 
   //! Fetching the event data from server by ID ------------------------------------------
   useEffect(()=>{
@@ -27,7 +28,8 @@ export default function EventPage() {
   const handleCopyLink = () => {
     const linkToShare = window.location.href;
     navigator.clipboard.writeText(linkToShare).then(() => {
-      alert('Link copied to clipboard!');
+      setMessage("Event link copied.");
+      window.setTimeout(() => setMessage(null), 2500);
     });
   };
 
@@ -46,7 +48,12 @@ export default function EventPage() {
 if (!event) return '';
   return (
     <div className="flex flex-col mx-5 xl:mx-32 md:mx-10 mt-5 flex-grow">
-     <div className="h-[260px] overflow-hidden rounded-lg bg-slate-200 shadow-sm md:h-[440px] dark:bg-slate-800">
+     {message && (
+       <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 font-semibold text-emerald-800">
+         {message}
+       </div>
+     )}
+     <div className="h-[260px] overflow-hidden rounded-lg bg-slate-200 shadow-sm md:h-[440px]">
         {event.image ? (
           <img src={eventImageUrl(event.image)} alt={event.title} className='h-full w-full object-cover'/>
         ) : (
@@ -61,7 +68,7 @@ if (!event) return '';
           </Link>
       </div>
       <div className="mx-2">
-          <h2 className="text-md md:text-xl font-bold mt-3 text-primarydark">{event.ticketPrice === 0? 'Free' : 'LKR. '+ event.ticketPrice}</h2>
+          <h2 className="text-md md:text-xl font-bold mt-3 text-primarydark">{event.ticketPrice === 0? 'Free' : 'INR. '+ event.ticketPrice}</h2>
       </div>
       <div className="mx-2 mt-5 text-md md:text-lg truncate-3-lines">
         {event.description}

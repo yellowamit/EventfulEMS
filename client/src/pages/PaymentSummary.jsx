@@ -1,38 +1,40 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios';
 import  { useContext, useEffect, useState } from 'react'
-import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import {IoMdArrowBack} from 'react-icons/io'
 import { UserContext } from '../UserContext';
 import Qrcode from 'qrcode' //TODO:
 import { playTone } from '../utils/sound';
+import { MdCheckCircle } from 'react-icons/md';
 
 export default function PaymentSummary() {
     const {id} = useParams();
-    const [searchParams] = useSearchParams();
+const [searchParams] = useSearchParams();
+    const location = useLocation();
     const quantity = Math.min(Math.max(Number(searchParams.get("quantity") || 1), 1), 10);
     const [event, setEvent] = useState(null);
-    const {user} = useContext(UserContext);
+    const {user, loading: userLoading} = useContext(UserContext);
     const [details, setDetails] = useState({
       name: '',
       email: '',
       contactNo: '',
     });
 //!Adding a default state for ticket-----------------------------
-    const defaultTicketState = {
-      userid: user ? user._id : '',
-      eventid: '',
-      ticketDetails: {
-        name: user ? user.name : '',
-        email: user ? user.email : '',
-        eventname: '',
-        eventdate: '',
-        eventtime: '',
-        ticketprice: '',
-        qr: '',
-      },
+        const defaultTicketState = {
+  userid: user ? user._id : '',
+  eventid: '',
+    ticketDetails: {
+    name: user ? user.name : '',
+    email: user ? user.email : '',
+    eventname: '',
+    eventdate: '',
+    eventtime: '',
+    ticketprice: '',
+    qr: '',
+  },
       count: quantity,
-    };
+};
 //! add default state to the ticket details state
     const [ticketDetails, setTicketDetails] = useState(defaultTicketState);
 
@@ -68,7 +70,7 @@ export default function PaymentSummary() {
       }).catch((error) => {
         console.error("Error fetching events:", error);
       });
-    }, [id]);
+    }, [id, quantity]);
 //! Getting user details using useeffect and setting to new ticket details with previous details
     useEffect(() => {
       setTicketDetails(prevTicketDetails => ({
@@ -84,9 +86,16 @@ export default function PaymentSummary() {
     }, [user, quantity]);
     
     
-    if (!user) return <Navigate to="/login" />
+if (userLoading) {
+  return (
+    <div className="flex h-64 items-center justify-center text-lg text-slate-500">
+      Loading checkout...
+    </div>
+  );
+}
+if (!user) return <Navigate to="/login" replace state={{ from: location }} />
     if (!event) return '';
-    const total = Number(event.ticketPrice || 0) * quantity;
+const total = Number(event.ticketPrice || 0) * quantity;
 
     const handleChangeDetails = (e) => {
       const { name, value } = e.target;
@@ -119,7 +128,7 @@ export default function PaymentSummary() {
       ticketDetails: {
         ...ticketDetails.ticketDetails,
         qr: qrCode,
-        totalPrice: total,
+      totalPrice: total,
       },
       count: quantity,
     };
@@ -130,7 +139,7 @@ export default function PaymentSummary() {
     setError("");
     console.log('Success creating ticket', updatedTicketDetails)
   } catch (error) {
-    playTone("error");
+playTone("error");
     setError(error.response?.data?.error || "Error creating ticket");
     console.error('Error creating ticket:', error);
   }
@@ -150,11 +159,13 @@ async function generateQRCode(name, eventName, ticketCount) {
 }
 if (createdTicket){
   return (
-    <div className="mx-auto mt-16 max-w-2xl rounded-lg border border-emerald-200 bg-white p-8 text-center shadow-xl dark:border-emerald-700 dark:bg-slate-900">
-      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl font-black text-emerald-700">✓</div>
+    <div className="mx-auto mt-16 max-w-2xl rounded-lg border border-emerald-200 bg-white p-8 text-center shadow-xl">
+      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-4xl text-emerald-700">
+        <MdCheckCircle />
+      </div>
       <h1 className="text-3xl font-extrabold">Ticket confirmed</h1>
-      <p className="mt-3 text-slate-600 dark:text-slate-300">{quantity} ticket(s) booked for {createdTicket.ticketDetails.eventname}.</p>
-      <div className="mt-6 rounded-md bg-slate-100 p-4 font-mono text-lg font-bold text-primarydark dark:bg-slate-800">
+      <p className="mt-3 text-slate-600">{quantity} ticket(s) booked for {createdTicket.ticketDetails.eventname}.</p>
+      <div className="mt-6 rounded-md bg-slate-100 p-4 font-mono text-lg font-bold text-primarydark">
         {createdTicket.ticketCode}
       </div>
       <div className="mt-6 flex justify-center gap-3">
@@ -274,7 +285,7 @@ if (createdTicket){
               />
             </div>
             <div className="float-right">
-            <p className="text-sm font-semibold pb-2 pt-8">Total : LKR. {total}</p>
+            <p className="text-sm font-semibold pb-2 pt-8">Total : INR. {total}</p>
             {error && <p className="max-w-sm pb-2 text-sm font-semibold text-red-600">{error}</p>}
               <button type="button" 
                 onClick = {createTicket}
@@ -282,7 +293,7 @@ if (createdTicket){
                 
                
                 Make Payment</button>
-            </div>
+                          </div>
             
           </div>
       </div>
@@ -297,7 +308,7 @@ if (createdTicket){
             <p className="text-xs">{event.eventDate.split("T")[0]},</p>
             <p className="text-xs pb-2"> {event.eventTime}</p>
             <hr className=" my-2 border-t pt-2 border-gray-400" />
-            <p className="float-right font-bold">LKR. {total}</p>
+            <p className="float-right font-bold">INR. {total}</p>
             <p className="font-bold">Sub total: {total}</p>
           </div>
           
@@ -305,3 +316,4 @@ if (createdTicket){
       </>
     );
 }
+

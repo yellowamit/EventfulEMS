@@ -1,9 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { UserContext } from '../UserContext';
+import { Link, Navigate, useLocation } from 'react-router-dom';
+import { MdCheckCircle } from 'react-icons/md';
 
 export default function AddEvent() {
-  const {user} = useContext(UserContext);
+  const {user, loading} = useContext(UserContext);
+  const location = useLocation();
   const [formData, setFormData] = useState({
     owner: "",
     ownerName: "",
@@ -20,6 +23,7 @@ export default function AddEvent() {
     likes: 0
   });
   const [submittedEvent, setSubmittedEvent] = useState(null);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -49,7 +53,7 @@ export default function AddEvent() {
     e.preventDefault();
 
     if (!user?._id) {
-      console.error("Cannot create event without a logged-in user.");
+      setMessage({ type: "error", text: "Please sign in before creating an event." });
       return;
     }
 
@@ -65,19 +69,49 @@ export default function AddEvent() {
       .then((response) => {
         console.log("Event posted successfully:", response.data);
         setSubmittedEvent(response.data);
+        setMessage(null);
         
       })
       .catch((error) => {
         console.error("Error posting event:", error);
+        setMessage({ type: "error", text: error.response?.data?.error || "Could not create the event. Please try again." });
       });
   };
+
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center text-lg text-slate-500">
+        Loading event form...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  if (submittedEvent) {
+    return (
+      <div className="mx-auto mt-16 max-w-2xl rounded-lg border border-emerald-200 bg-white p-8 text-center shadow-xl">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-4xl text-emerald-700">
+          <MdCheckCircle />
+        </div>
+        <h1 className="text-3xl font-extrabold">Event created</h1>
+        <p className="mt-3 text-slate-600">{submittedEvent.title} is now published.</p>
+        <div className="mt-6 flex justify-center gap-3">
+          <Link to={`/event/${submittedEvent._id}`}><button className="primary">View Event</button></Link>
+          <Link to="/myevents"><button className="secondary">My Events</button></Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='mx-auto mt-10 flex w-full max-w-5xl flex-col px-6'>
       <div><h1 className='font-bold text-[36px] mb-5'>Post an Event</h1></div>
-      {submittedEvent && (
-        <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 p-4 font-semibold text-emerald-800">
-          Event published: {submittedEvent.title}
+      {message && (
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 font-semibold text-red-700">
+          {message.text}
         </div>
       )}
       

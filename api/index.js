@@ -29,6 +29,7 @@ const cookieOptions = {
 };
 const jwtSecret = process.env.JWT_SECRET; // ✅ From .env, never hardcoded
 
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -46,12 +47,11 @@ app.use(
     }
 
     callback(null, {
+      origin: originAllowed ? origin : false,
       credentials: true,
-      origin: originAllowed,
     });
   })
 );
-
 // ✅ Serve uploaded images as static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
@@ -85,6 +85,13 @@ const upload = multer({ storage });
 
 api.get("/test", (req, res) => {
   res.json("test ok");
+});
+
+api.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    environment: process.env.NODE_ENV || "development",
+  });
 });
 
 api.post("/register", async (req, res) => {
