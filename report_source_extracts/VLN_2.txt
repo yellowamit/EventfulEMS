@@ -1,0 +1,187 @@
+VLN (2).pdf
+PAGES 13
+
+
+--- PAGE 1 ---
+Visual Language Navigation
+
+
+--- PAGE 2 ---
+Goal:
+Build an AI agent that can understand human 
+instructions and navigate inside buildings.
+Example instruction:
+"Go up the stairs and stop near the mirror.“
+Key Idea
+• Combine Language Understanding and Visual 
+Perception
+• Navigate through indoor environments
+• Decide the best path step-by-step
+• Reach the goal location
+• Evaluate navigation performance
+
+
+--- PAGE 3 ---
+Problem the System Solves
+Robots struggle to understand human instructions.
+Example:
+Instruction -
+"Walk through the hallway and stop near the door.“
+Challenges:
+• Understanding natural language
+• Recognizing objects in the environment
+• Knowing where to move next
+• Avoiding wrong paths or loops
+• Reaching the correct destination
+Our system solves this by combining vision + reasoning + 
+navigation algorithms.
+
+
+--- PAGE 4 ---
+Dataset: Matterport3D (R2R Navigation Dataset)
+The project uses the Matterport3D Room-to-Room (R2R) 
+dataset, which contains real indoor environments for training 
+navigation agents.
+Key Components of the Dataset
+• Indoor Building Scans – Real 3D scans of houses and 
+buildings
+• Navigation Graph – Locations (viewpoints) connected by 
+paths
+• Natural Language Instructions – Human-written 
+navigation instructions
+• RGB Images – Visual observations of the environment
+• Ground Truth Paths – Correct navigation routes for 
+evaluation
+
+
+
+--- PAGE 5 ---
+Navigation Decision Flow
+
+
+
+--- PAGE 6 ---
+1. Load RGB
+(current 
+viewpoint)
+Multi-modal perception module
+2. Low-level vision 
+Scene Captioning 
+(BLIP2/3)
+Object Detection 
+YOLO7+
+Depth Estimation 
+(MiDAS)
+Semantic 
+Segmentation
+Scene Graph 
+Generation 
+(GNNs)
+Uncertainty 
+Estimation 
+(optional)
+Request next 
+viewpoint 
+(optional) 7. Action
+3. High-level semantic
+4. Supporting Modules (optional)
+NavGPT 
+RL Agent (PPO)
+6. Decision Module
+5. Multi-modal fusion
+Flamingo / BLIP-2 / 
+MiniGPT-4
+• Low-level: 
+Extracts basic 
+features needed 
+to ground 
+instructions
+• High-level 
+semantics: Adds 
+semantic 
+structure and 
+spatial 
+awareness.
+Perception Module
+
+
+--- PAGE 7 ---
+Path Planning
+Global 
+planning
+(Dijkstra/A*)
+Local 
+planning
+Cost Map
+Sensor 
+Data
+Environment Perception & 
+Representation
+SLAM (gmapping 
+or cartographer)
+Localization (amcl)
+2D Map
+Task Goal
+Input
+Path Execution & Control
+Sensor update
+Managing 
+Coordinates (tf)
+Feedback on the robot's actual pose
+Velocity Commands 
+(`/cmd_vel`)
+Localization Output: At time X, the robot is located at (x, y, z) in the map, and facing a certain direction (orientation)
+Routing Module
+
+
+--- PAGE 8 ---
+
+
+
+--- PAGE 9 ---
+
+
+
+--- PAGE 10 ---
+
+
+
+--- PAGE 11 ---
+
+
+
+--- PAGE 12 ---
+To-Do List:
+• Explore the R2R Dataset folders (RGB images, instructions, viewpoint IDs).
+• Reducing errors in LLM reasoning (“hallucinations”).
+• Handling longer, multi-step navigation instructions.
+• Research prompt templates (ReAct-style, Chain-of-Thought, etc.) for navigation.
+• Collect example prompts and outputs, then analyze where the LLM succeeds/fails.
+• Try different planners (Dijkstra).
+• Explore reinforcement learning agents alongside NavGPT
+• Evaluation & Metrics
+• Study how success is measured in VLN (e.g., Success weighted by Path Length 
+(SPL)).
+• Create small evaluation scripts for comparing predicted path vs. ground truth path.
+• Prepare test cases where the agent should succeed/fail.
+
+
+--- PAGE 13 ---
+SLAM package: 
+• gmapping / 
+cartographer / 
+hector_slam
+ROS navigation Package: move_base
+Plugins: 
+• Global Planners: Global Planner/ NavFn
+• Local Planners: DWA Local Planner/ Teb Local Planner
+• Costmaps: costmaps
+Path Execution & 
+Control: 
+• /cmd_vel
+Problem: Given a starting location and a target location (or sequence of waypoints) in an indoor environment, find an 
+optimal, collision-free path for a simple robot to follow, and then execute that path.
+• Phase 1: Environment Perception & Representation
+• Phase 2: Path Planning
+• Phase 3: Path Execution & Control
+• Phase 4: Task Definition & User Interface (rviz's "2D Nav Goal" tool)

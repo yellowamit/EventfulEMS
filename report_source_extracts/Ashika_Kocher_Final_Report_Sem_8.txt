@@ -1,0 +1,1441 @@
+Ashika Kocher Final Report Sem 8.pdf
+PAGES 45
+
+
+--- PAGE 1 ---
+FINAL PROJECT REPORT 
+ON 
+“AI Based Crop Disease Detection App”
+ 
+Department of Computer Engineering and Technology 
+Guru Nanak Dev University, Amritsar 
+ 
+ 
+ 
+Submitted to:                                                                                                  Submitted by:  
+Dr. Amit Chhabra                                                                                              Ashika Kocher 
+                 B.Tech. CSE Sem - 8(B)  
+                                                                                                                             17032206387           
+ 
+ 
+ 
+
+
+
+--- PAGE 2 ---
+CERTIFICATE 
+ 
+  
+
+
+
+--- PAGE 3 ---
+Acknowledgement 
+ 
+The satisfaction and sense of achievement that accompany the successful completion of any 
+task would be incomplete without expressing gratitude to the people whose constant 
+guidance, encouragement, and support made this project possible. 
+I would like to express my sincere gratitude to my project guide, Dr. Amit Chhabra, for his 
+valuable guidance, continuous motivation, and constructive suggestions, which greatly 
+assisted me throughout the development and preparation of this project. 
+I also extend my thanks to my colleagues for their cooperation and support, which contributed 
+significantly to the successful completion of this work. 
+ 
+ 
+ 
+Ashika Kocher 
+  
+
+
+--- PAGE 4 ---
+Self Declaration 
+ 
+I hereby declare that the project report entitled “AI Based Crop Disease App” which is being 
+submitted as Final Project of 8th Semester in Computer Science Engineering to Guru Nanak 
+Dev University, Amritsar is an authentic record of my genuine work done under the guidance 
+of Er. Amit Chhabra, Dept. of Computer Engineering and Technology, Amritsar.  
+ 
+ 
+________________ 
+ 
+Candidate Signature  
+Name: Ashika Kocher 
+  
+
+
+
+--- PAGE 5 ---
+ 
+TABLE OF CONTENTS 
+ 
+Sr. No. Contents Page No. 
+1. Introduction 1–6 
+ 
+1.1 About Vibrantick Infotech Solutions Ltd 1 
+ 
+1.2 Introduction to Internship 1–2 
+ 
+1.3 Organization Overview 2 
+ 
+1.4 Internship Learning Experience 2-3 
+ 
+1.5 Introduction to AI and Machine Learning 3-4 
+ 
+1.6 Aims and Objectives 4 
+2. Technology Used 5-13 
+ 
+2.1 Python Programming 5-6 
+ 
+2.2 Convolutional Neural Network (CNN) 7-8 
+ 
+2.3 MobileNet Architecture 8-9 
+ 
+2.4 Transfer Learning Using Google Collab 9-10 
+ 2.5 FastAPI Framework 10-11 
+ 2.6 React Frontend Development 11-12 
+ 2.7 Integration of Frontend and Backend 12-13 
+3. Introduction to Project 14-30 
+ 3.1 Project Overview 14 
+ 3.2 Problem Statement 14-15 
+ 3.3 Objectives of the Project 15 
+ 3.4 Proposed System Architecture 16-17 
+ 3.5 Dataset Collection and Preprocessing 17-18 
+ 3.6 Model Training and Implementation 18-20 
+ 3.7 Disease Detection Workflow 20-21 
+ 3.8 Frontend Design and User Interface 21-22 
+ 3.9 API Development using FastAPI 22-23 
+ 3.10 Testing and Results 23 
+ 3.11 Advantages of the Proposed System 24-25 
+
+
+--- PAGE 6 ---
+ 3.12 Future Scope and Enhancements 25 
+ 3.13 Government Improvement Initiative and Impact 25-26 
+ 3.14 Conclusion 27 
+4. Diagrams and Screenshots 27-37 
+ 4.1 Data Flow Diagram 27-28 
+ 4.2 System Architecture Diagram 29 
+ 4.3 CNN Workflow Diagram 30 
+ 4.4 Frontend Screenshots 30-37 
+5. References and Appendix 38 
+ 5.1 Research Papers and References 38 
+ 5.2 Final Conclusion 39 
+ 
+  
+
+
+--- PAGE 7 ---
+ 
+1 
+ 
+CHAPTER 1 – INTRODUCTION 
+1.1 About Vibrantick InfoTech Solutions Pvt Ltd 
+  
+Vibrantick Infotech Solutions is a leading IT and digital solutions company based in Mohali, 
+India. The company specializes in providing innovative and customized solutions in the fields 
+of web development, software development, digital marketing, cloud services, DevSecOps, 
+cybersecurity, database management, mobile application development, e-commerce 
+management, and IT training services. 
+Established with the vision of delivering high-quality technology solutions, the organization 
+has successfully served numerous clients across different industries. Vibrantick Infotech 
+Solutions is recognized for its customer-centric approach, technical expertise, and 
+commitment to innovation. The company focuses on understanding client requirements and 
+delivering tailored solutions that help businesses grow in the modern digital environment. 
+The organization consists of a team of skilled professionals who work collaboratively to 
+develop reliable and efficient software systems. With its strong emphasis on quality 
+assurance, fast development processes, and continuous technical support, Vibrantick has 
+built a reputation as a trusted technology partner. 
+The company also provides practical training and internship opportunities to students, 
+enabling them to gain industry exposure and hands-on experience in emerging technologies 
+such as Artificial Intelligence, Machine Learning, Web Development, and Cloud Computing. 
+During the internship, students are encouraged to work on real-world projects under 
+professional guidance, helping them improve both their technical and problem-solving skills. 
+ 
+1.2 Introduction to Internship 
+The internship at Vibrantick Infotech Solutions provided an excellent opportunity to gain 
+practical exposure to real-world software development, machine learning, and web 
+technologies. The internship mainly focused on the development of an AI-Based Crop 
+Disease Detection Application using Machine Learning and Deep Learning techniques. 
+During the internship period, various modern technologies and frameworks were explored, 
+including Python, Convolutional Neural Networks (CNN), MobileNet architecture, FastAPI, 
+ReactJS, and Google Colab. The internship emphasized both theoretical understanding and 
+
+
+
+--- PAGE 8 ---
+ 
+2 
+ 
+practical implementation of Artificial Intelligence models in solving real-life agricultural 
+problems. 
+Apart from working on the major AI project, I also worked under experienced team leads on 
+multiple client-based projects. These tasks involved assisting in website development, 
+handling maintenance work, updating project content, resolving technical issues, and 
+supporting ongoing development activities. Working on client projects helped me 
+understand industry standards, project workflows, teamwork, and the importance of timely 
+project delivery. 
+The internship provided hands-on experience in: 
+• Machine Learning model development and training 
+• Transfer Learning using MobileNet CNN architecture 
+• API development using FastAPI 
+• Frontend development using ReactJS 
+• Integration of frontend and backend systems 
+• Debugging and maintenance of live projects 
+• Working collaboratively in a professional development team 
+• Managing real-world client requirements and updates 
+The primary objective of the internship project was to design and develop a smart system 
+capable of detecting crop diseases from plant leaf images. The system was developed to 
+assist farmers in identifying diseases at an early stage so that timely preventive measures 
+could be taken. The project also aligned with government agricultural improvement 
+initiatives and digital farming solutions. 
+Throughout the internship, important concepts such as data preprocessing, transfer 
+learning, model training, API development, frontend-backend integration, and deployment 
+workflows were learned and implemented. The internship significantly improved technical 
+skills, communication abilities, teamwork, and problem-solving capabilities while providing 
+valuable industry-level experience. 
+ 
+1.3 Organization Overview 
+Vibrantick Infotech Solutions is an ISO 9001:2015 certified IT company that provides 
+comprehensive digital and technological solutions to businesses and organizations. The 
+company operates in multiple domains including software development, enterprise 
+solutions, cloud services, cybersecurity, digital marketing, web design and development, 
+Oracle database management, and mobile application development. 
+
+
+--- PAGE 9 ---
+ 
+3 
+ 
+The organization follows a structured workflow consisting of requirement analysis, planning, 
+design, development, testing, and deployment. This systematic approach ensures timely 
+delivery of projects while maintaining high standards of quality and performance. 
+Vibrantick Infotech Solutions is equipped with a dedicated technical team that works on 
+innovative and scalable solutions for clients. The company promotes continuous learning, 
+creativity, and technological advancement among its employees and interns. By working on 
+live projects and practical assignments, interns gain valuable industry-level experience and 
+technical confidence. 
+The company strongly believes in adapting to modern technological trends and delivering 
+customer-oriented solutions. Its mission is to help businesses achieve digital growth through 
+innovative software solutions and advanced IT services. 
+During the internship tenure, the organization provided a professional working environment 
+and mentorship that supported learning and project development. Guidance from 
+experienced developers and mentors played a significant role in the successful completion of 
+the AI-based Crop Disease Detection project. 
+ 
+1.4 Internship Learning Experience 
+The internship at Vibrantick Infotech Solutions was a highly valuable learning experience 
+that provided practical exposure to modern software development and Artificial Intelligence 
+technologies. During the internship, I gained knowledge about real-world project 
+development, teamwork, client handling, and industry-level workflows. 
+One of the major learning outcomes of the internship was understanding how machine 
+learning models are developed and integrated into real applications. I worked on an AI-
+Based Crop Disease Detection System where I learned about dataset collection, image 
+preprocessing, model training, testing, and prediction using Convolutional Neural Networks 
+(CNN). I also explored transfer learning using the MobileNet architecture to improve model 
+performance and accuracy. 
+The internship enhanced my technical skills in Python programming, FastAPI backend 
+development, and ReactJS frontend development. I learned how APIs are created and 
+integrated with frontend applications to build complete full-stack systems. I also gained 
+hands-on experience with Google Colab for model training and experimentation. 
+Apart from the AI project, I also worked under team leads on multiple client projects and 
+maintenance tasks. These responsibilities helped me understand professional development 
+practices, debugging techniques, website updates, content management, and handling real-
+time project requirements. Working in a collaborative environment improved my 
+communication skills, teamwork abilities, and confidence in solving technical problems. 
+The internship also taught me the importance of project planning, testing, documentation, 
+and maintaining software quality standards. Overall, the internship bridged the gap between 
+
+
+--- PAGE 10 ---
+ 
+4 
+ 
+academic knowledge and practical industry experience, preparing me for future 
+opportunities in software development and machine learning. 
+ 
+1.5 Introduction to Artificial Intelligence and Machine Learning 
+Artificial Intelligence (AI) is a branch of computer science that focuses on developing systems 
+capable of performing tasks that normally require human intelligence. These tasks include 
+problem-solving, decision-making, speech recognition, image processing, and pattern 
+identification. AI systems are designed to analyze data, learn from it, and make intelligent 
+decisions with minimal human intervention. 
+Machine Learning (ML) is a subset of Artificial Intelligence that enables computers to learn 
+from data and improve their performance without being explicitly programmed. Instead of 
+following fixed instructions, machine learning models identify patterns in data and make 
+predictions based on learned information. 
+Machine Learning is widely used in various fields such as healthcare, agriculture, education, 
+finance, cybersecurity, and business analytics. In agriculture, machine learning helps farmers 
+identify crop diseases, monitor soil conditions, predict crop yield, and improve farming 
+efficiency. 
+Deep Learning is an advanced branch of machine learning that uses neural networks to 
+process complex data such as images and videos. Convolutional Neural Networks (CNNs) are 
+commonly used for image classification and disease detection tasks because they can 
+automatically extract important features from images. 
+In this project, a CNN model based on MobileNet architecture was used for crop disease 
+detection. Transfer learning techniques were applied to train the model efficiently using a 
+pre-trained neural network. The system was developed to detect diseases from plant leaf 
+images and provide accurate predictions to support farmers in early disease identification. 
+Artificial Intelligence and Machine Learning technologies are transforming modern industries 
+by automating processes, increasing efficiency, and providing smart solutions to real-world 
+problems. 
+ 
+1.6 Aims and Objectives 
+The main aim of the project is to develop an AI-Based Crop Disease Detection Application 
+that can accurately identify crop diseases from plant leaf images using Machine Learning and 
+Deep Learning techniques. The system is designed to assist farmers in detecting diseases at 
+an early stage and support better agricultural productivity through smart technology 
+solutions. The key objectives included: 
+• To gain practical exposure to real -world software development and IT industry 
+workflows.  
+
+
+--- PAGE 11 ---
+ 
+5 
+ 
+• To learn and implement Artificial Intelligence and Machine Learning concepts in live 
+projects.  
+• To enhance technical skills in Python, ReactJS, FastAPI, and CNN model development.  
+• To work on client-based projects and understand project maintenance and debugging 
+processes.  
+• To improve problem-solving, communication, and teamwork skills by working under 
+experienced team leads.  
+• To understand frontend-backend integration and full-stack application development.  
+• To bridge the gap between academic knowledge and industry -level practical 
+experience.  
+ 
+CHAPTER 2 – TECHNOLOGY USED 
+2.1 Python Programming 
+ 
+Python is a high-level, interpreted, and general-purpose programming language that is widely 
+used in modern software development, Artificial Intelligence, Machine Learning, Data Science, 
+Web Development, and Automation. Python is considered one of the most  popular 
+programming languages because of its simple syntax, easy readability, flexibility, and large 
+collection of libraries and frameworks. It allows developers to write efficient and maintainable 
+code with fewer lines compared to many traditional programming languages. 
+Python supports multiple programming paradigms including procedural programming, object-
+oriented programming, and functional programming. Due to its simplicity and powerful 
+capabilities, Python is highly preferred for research, rapid application developmen t, and AI -
+based projects. 
+In the AI -Based Crop Disease Detection project, Python was used as the core programming 
+language for implementing machine learning algorithms, image processing operations, 
+backend functionalities, and API integration. The entire machine learning workflow including 
+dataset preprocessing, model training, prediction generation, and result handling was 
+performed using Python. 
+
+
+
+--- PAGE 12 ---
+ 
+6 
+ 
+One of the major advantages of Python is its extensive ecosystem of libraries and frameworks. 
+In this project, several important Python libraries were used: 
+• TensorFlow and Keras:  Used for building, training, and testing the Convolutional 
+Neural Network (CNN) model.  
+• NumPy: Used for numerical computations and handling multidimensional arrays.  
+• OpenCV: Used for image processing and preprocessing operations such as resizing, 
+image enhancement, and conversion.  
+• Matplotlib: Used for visualizing graphs such as training accuracy and loss curves.  
+• Pandas: Used for managing and analyzing dataset information.  
+• FastAPI: Used for backend API development and connecting the machine learning 
+model with the frontend application.  
+Python also played an important role in implementing transfer learning using the MobileNet 
+architecture. The pre -trained MobileNet model was imported and customized according to 
+the project requirements. Python made it easy to integrate different component s of the 
+application such as model prediction, image upload handling, and frontend -backend 
+communication. 
+The language was also helpful during debugging, testing, and maintenance of the project 
+because of its clear syntax and strong community support. Python’s compatibility with cloud 
+platforms such as Google Colab enabled faster model training using GPU suppo rt, which 
+significantly improved the development process. 
+Overall, Python served as the foundation of the entire AI -Based Crop Disease Detection 
+System. Its simplicity, flexibility, and powerful machine learning ecosystem helped in the 
+successful implementation of the project and provided an efficient environment  for 
+developing intelligent agricultural solutions. 
+ 
+2.2 Convolutional Neural Network (CNN) 
+ 
+
+
+
+--- PAGE 13 ---
+ 
+7 
+ 
+Convolutional Neural Network (CNN) is a type of deep learning algorithm that is mainly used 
+for image recognition, image classification, object detection, and computer vision 
+applications. CNN is one of the most advanced and widely used neural network architectures 
+for processing visual data because it can automatically extract important features from 
+images without requiring manual feature engineering. 
+CNN is inspired by the working mechanism of the human visual system. It analyzes images 
+by identifying patterns such as edges, textures, shapes, colors, and object structures. These 
+extracted features are then used to classify and recognize images accurately. 
+In this internship project, CNN was used to develop the AI-Based Crop Disease Detection 
+System. The CNN model was trained using plant leaf images containing both healthy and 
+diseased crops. The model learned different visual characteristics and disease patterns 
+present in the leaf images and used this knowledge to predict diseases accurately. 
+The main objective of using CNN in this project was to automate the crop disease 
+identification process and provide quick and accurate predictions to farmers. Traditional 
+methods of disease detection require manual inspection by experts, which can be time-
+consuming and less efficient. CNN-based systems improve accuracy, reduce human effort, 
+and support early disease detection. 
+A CNN architecture mainly consists of the following layers: 
+1. Convolution Layer: The convolution layer is the most important layer in a CNN model. It 
+extracts important features from the input image using filters or kernels. These filters scan 
+the image and detect patterns such as edges, textures, and color variations. 
+In the crop disease detection system, convolution layers helped identify disease-related 
+patterns present on plant leaves such as spots, discoloration, and damaged regions. 
+2. Activation Function: After convolution, activation functions such as ReLU (Rectified Linear 
+Unit) are applied to introduce non-linearity into the model. This helps the neural network 
+learn complex image patterns effectively. 
+3. Pooling Layer : Pooling layers are used to reduce the size of feature maps generated by 
+convolution layers. This helps in reducing computational complexity and prevents overfitting. 
+Max pooling is one of the most commonly used pooling techniques in CNNs. 
+Pooling improves the efficiency and speed of the model while retaining important image 
+information. 
+4. Fully Connected Layer: The fully connected layer performs the final classification task. It 
+takes extracted features from previous layers and predicts the output class, such as 
+identifying whether a crop leaf is healthy or infected. 
+5. Output Layer: The output layer generates the final prediction result. In this project, the 
+output layer predicted different crop diseases based on the uploaded leaf image. 
+For improving the performance of the system, transfer learning was implemented using the 
+MobileNet architecture. MobileNet is a lightweight and efficient pre-trained CNN model that 
+
+
+--- PAGE 14 ---
+ 
+8 
+ 
+reduces training time while maintaining high accuracy. Instead of training the model from 
+scratch, pre-trained weights from MobileNet were used and fine-tuned according to the crop 
+disease dataset. 
+The CNN model was trained using Google Colab with GPU support, which accelerated the 
+training process and improved model performance. During training, the model learned 
+patterns from thousands of leaf images and gradually improved its prediction accuracy 
+through multiple training epochs. 
+The CNN-based crop disease detection system offers several advantages: 
+• High accuracy in image classification  
+• Automatic feature extraction  
+• Faster disease identification  
+• Reduced manual effort  
+• Early disease detection for better crop management  
+• Scalable and efficient AI-based solution for agriculture  
+Thus, Convolutional Neural Network technology played a crucial role in the successful 
+development of the AI-Based Crop Disease Detection Application and demonstrated the 
+practical application of deep learning in smart agriculture systems. 
+2.3 MobileNet Architecture 
+ 
+MobileNet is a lightweight and efficient Convolutional Neural Network (CNN) architecture 
+developed specifically for mobile and embedded vision applications. It is designed to provide 
+high accuracy while using fewer computational resources and lower memory consumption 
+compared to traditional deep learning models. Due to its optimized structure and fast 
+performance, MobileNet is widely used in real-time image classification and object detection 
+applications. 
+In the AI-Based Crop Disease Detection project, the MobileNet architecture was used as the 
+base model for implementing transfer learning. MobileNet helped in accurately classifying 
+plant leaf images while reducing training time and computational complexity. Since the 
+project involved image recognition and disease prediction, MobileNet was considered an 
+effective choice because of its ability to process images efficiently. 
+
+
+
+--- PAGE 15 ---
+ 
+9 
+ 
+One of the major features of MobileNet is the use of Depthwise Separable Convolutions 
+instead of standard convolution operations. This technique divides the convolution process 
+into two separate operations: 
+• Depthwise Convolution  
+• Pointwise Convolution  
+This approach significantly reduces the number of parameters and computations required 
+during model training, making the model lightweight and faster. 
+The MobileNet architecture offers several advantages: 
+• Faster training and prediction speed  
+• Lower memory usage  
+• High accuracy in image classification tasks  
+• Efficient performance on limited hardware resources  
+• Suitable for real-time applications  
+In this project, the pre-trained MobileNet model was imported using TensorFlow and Keras 
+libraries. The final layers of the model were customized according to the crop disease 
+dataset. Additional classification layers were added to predict different plant diseases based 
+on uploaded leaf images. 
+The MobileNet model was trained on a dataset containing healthy and diseased crop leaf 
+images. During training, the model learned important disease-related features such as color 
+changes, spots, texture variations, and infected regions on leaves. The trained model was 
+then integrated into the FastAPI backend for real-time disease prediction. 
+By using MobileNet architecture, the project achieved improved accuracy, reduced training 
+time, and efficient prediction performance. The lightweight nature of MobileNet also makes 
+the system suitable for future deployment on mobile devices and smart agricultural 
+applications. 
+2.4  Transfer Learning Using Google Collab 
+ 
+Transfer Learning is a machine learning technique in which a pre-trained model is reused for 
+solving a new but related problem. Instead of training a deep learning model from scratch, 
+
+
+
+--- PAGE 16 ---
+ 
+10 
+ 
+transfer learning uses the knowledge gained from previously trained models and applies it to 
+a new dataset. This approach reduces training time, improves model accuracy, and requires 
+fewer computational resources. 
+In the AI-Based Crop Disease Detection project, transfer learning was implemented using the 
+MobileNet architecture. The pre-trained MobileNet model had already been trained on a 
+large image dataset, enabling it to recognize general image features effectively. These 
+learned features were then adapted for crop disease classification by training the model on 
+plant leaf images. 
+The process of transfer learning involved the following steps: 
+1. Importing the pre-trained MobileNet model  
+2. Freezing initial layers of the model  
+3. Adding custom classification layers  
+4. Training the model on the crop disease dataset  
+5. Fine-tuning the model for improved accuracy  
+Transfer learning helped improve the overall efficiency of the system because the model did 
+not need to learn image features from the beginning. Instead, it focused on learning disease-
+specific patterns present in crop leaf images. 
+Google Colab was used for implementing and training the machine learning model. Google 
+Colab is a cloud-based platform developed by Google that allows users to write and execute 
+Python code through Jupyter notebooks. It provides free access to powerful GPU and TPU 
+resources, making it highly suitable for machine learning and deep learning projects. 
+Google Colab provided several benefits during the internship project: 
+• Free cloud-based GPU support for faster model training  
+• Easy integration with TensorFlow and Keras  
+• No need for high-end local hardware  
+• Automatic saving and sharing of notebooks  
+• Simple environment setup for machine learning experiments  
+During model training, the dataset containing crop leaf images was uploaded to Google 
+Colab. Image preprocessing techniques such as resizing, normalization, and augmentation 
+were applied before training the model. The MobileNet model was then trained over 
+multiple epochs to improve disease prediction accuracy. 
+Graphs such as training accuracy and loss curves were also generated using Google Colab to 
+evaluate model performance. After successful training, the final model was saved and 
+exported for integration with the FastAPI backend application. 
+
+
+--- PAGE 17 ---
+ 
+11 
+ 
+Transfer learning combined with Google Colab significantly improved the development 
+process by reducing training complexity and enabling efficient deep learning 
+experimentation for the crop disease detection system. 
+2.5 FastAPI Framework 
+ 
+FastAPI is a modern, high-performance Python web framework used for building APIs quickly 
+and efficiently. It is mainly used for backend development and is widely preferred for 
+machine learning and data-driven applications because of its speed, simplicity, and 
+automatic API documentation features. 
+FastAPI is built on top of Starlette and Pydantic and supports asynchronous programming, 
+which improves application performance and response speed. It allows developers to create 
+RESTful APIs with minimal code while maintaining high performance. 
+In the AI-Based Crop Disease Detection project, FastAPI was used as the backend framework 
+for connecting the trained machine learning model with the frontend application. It handled 
+image upload requests, processed images, passed them to the CNN model for prediction, 
+and returned disease detection results to the frontend interface. 
+The FastAPI backend played an important role in the overall workflow of the application: 
+1. Accepting uploaded plant leaf images from users  
+2. Preprocessing images before prediction  
+3. Loading the trained MobileNet CNN model  
+4. Generating disease predictions  
+5. Returning prediction results through API responses  
+FastAPI offers several advantages that made it suitable for this project: 
+• High-speed performance  
+• Easy API creation and integration  
+• Automatic interactive API documentation  
+• Support for asynchronous operations  
+• Easy integration with machine learning models  
+• Lightweight and developer-friendly framework  
+
+
+
+--- PAGE 18 ---
+ 
+12 
+ 
+The backend APIs were developed using Python and FastAPI libraries. Endpoints were 
+created to handle prediction requests from the React frontend application. The uploaded 
+images were processed using image preprocessing techniques before being passed to the 
+trained CNN model. 
+FastAPI also simplified frontend-backend communication through REST APIs. The React 
+frontend sent HTTP requests containing plant leaf images, and FastAPI processed these 
+requests and generated prediction responses in JSON format. 
+Another major feature of FastAPI is its built-in API documentation support using Swagger UI. 
+This feature helped in testing and verifying API endpoints during development. 
+The FastAPI framework helped in creating an efficient and scalable backend system for the 
+crop disease detection application. It ensured smooth communication between the frontend 
+and the machine learning model, enabling real-time disease prediction and improving the 
+overall performance of the application. 
+ 
+2.5 React Frontend Development 
+  
+ReactJS is a widely used JavaScript library developed by Facebook for building 
+modern, dynamic, and interactive user interfaces for web applications. It is based on 
+a component-based architecture, which allows developers to create reusable UI 
+components and manage application data efficiently. ReactJS improves application 
+performance through its virtual DOM feature, which updates only the required parts 
+of a webpage instead of reloading the entire page. 
+In the AI-Based Crop Disease Detection project, ReactJS was used to design and 
+develop the frontend of the application. The frontend acted as the user interface 
+through which users could interact with the system. It provided a simple and user-
+friendly platform where users could upload images of crop leaves and receive disease 
+prediction results generated by the machine learning model. 
+The frontend was designed to ensure smooth navigation, responsiveness, and ease of 
+use. Features such as image upload functionality, prediction result display, loading 
+
+
+
+--- PAGE 19 ---
+ 
+13 
+ 
+indicators, and responsive layouts were implemented to improve user experience. 
+React components were used to organize different sections of the application 
+efficiently and make the code more maintainable. 
+HTML, CSS, and JavaScript were also used along with ReactJS for designing and styling 
+the web interface. CSS was used to create an attractive and responsive design, while 
+JavaScript handled interactive functionalities and frontend logic. 
+ReactJS also simplified the integration of frontend components with backend APIs. 
+The frontend communicated with the FastAPI backend using HTTP requests to send 
+crop leaf images and receive prediction results in real time. 
+Overall, ReactJS played an important role in building a responsive, interactive, and 
+efficient frontend for the AI-Based Crop Disease Detection system, making the 
+application more accessible and user-friendly for farmers and other users. 
+ 
+2.7 Integration of Frontend and Backend 
+Frontend and backend integration is one of the most important parts of full-stack 
+web application development. It enables smooth communication between the user 
+interface and the server-side functionalities of the application. The frontend is 
+responsible for interacting with users, while the backend handles data processing, 
+business logic, and machine learning predictions. 
+In the AI-Based Crop Disease Detection project, the ReactJS frontend was integrated 
+with the FastAPI backend using REST APIs. The frontend provided an interface where 
+users could upload images of crop leaves and interact with the system easily. The 
+backend processed these uploaded images using the trained CNN model based on 
+MobileNet architecture and generated disease prediction results. 
+HTTP requests were used for communication between the frontend and backend. 
+When a user uploaded a crop leaf image through the React frontend, the image was 
+sent to the FastAPI server through API endpoints. The backend then performed image 
+preprocessing operations such as resizing and normalization before passing the image 
+to the trained machine learning model for prediction. 
+After processing the image, the FastAPI backend generated the prediction result and 
+returned it to the frontend in JSON format. The React application then displayed the 
+detected disease result dynamically on the user interface. Error handling and 
+response validation were also implemented to ensure smooth communication and 
+better user experience. 
+The integration of frontend and backend helped in creating a complete AI-powered 
+full-stack web application capable of performing real-time crop disease detection 
+
+
+--- PAGE 20 ---
+ 
+14 
+ 
+efficiently. This integration improved system functionality, automation, and overall 
+user interaction with the application. 
+ 
+CHAPTER 3 – INTRODUCTION TO PROJECT 
+3.1 Project Overview 
+The AI-Based Crop Disease Detection System is a smart agricultural web application developed to 
+help farmers identify crop diseases and receive proper medicine recommendations using Artificial 
+Intelligence and Machine Learning technologies. The project was developed during the internship at 
+Vibrantick Infotech Solutions using technologies such as Python, CNN, MobileNet, FastAPI, ReactJS, 
+Google Colab, and Hugging Face API. 
+The application consists of three major modules: 
+• Farmer Module  
+• Supplier Module  
+• Admin Panel (Superuser Module)  
+The system uses a Convolutional Neural Network (CNN) model based on MobileNet architecture to 
+detect crop diseases from uploaded plant leaf images. After prediction, the system also recommends 
+suitable medicines, dosage details, and nearby supplier stores registered on the platform. 
+The Farmer Module allows farmers to register themselves on the platform and upload KYC 
+documents for verification. The admin verifies and approves the farmer account before login access 
+is provided. After successful login, farmers can access various features such as: 
+• Disease prediction using crop images  
+• Prediction history  
+• Analytics dashboard  
+• Disease library  
+• Informational agricultural videos  
+• Farmer profile management  
+• FAQs and support section  
+• AI chatbot assistance  
+An AI chatbot feature was also integrated into the application using the Hugging Face free API. The 
+chatbot helps users by answering basic agriculture-related queries, providing guidance about 
+diseases, and improving overall user interaction within the system. 
+The Supplier Module allows suppliers to register their medicine stores and add medicine details 
+along with dosage information. These medicines are displayed to farmers during disease prediction if 
+they match the detected disease. 
+
+
+--- PAGE 21 ---
+ 
+15 
+ 
+The Admin Panel acts as the central management system of the application. The admin manages 
+farmer approvals, supplier registrations, stores, medicines, users, and overall platform activities. 
+The project aims to provide a complete smart farming solution by combining AI-based disease 
+detection, medicine recommendation, supplier management, analytics, and chatbot assistance into a 
+single digital platform. 
+3.2 Problem Statement  
+Agriculture is one of the most important sectors for food production and economic development. 
+However, crop diseases continue to be a major challenge for farmers, often resulting in reduced crop 
+quality, lower productivity, and financial losses. Early detection of crop diseases is essential to 
+prevent the spread of infections and ensure better crop management. 
+Traditional methods of crop disease identification mainly depend on manual inspection by 
+agricultural experts or farmers. These methods are time-consuming, less accurate, and not always 
+accessible in rural areas. Many farmers lack proper technical knowledge and immediate access to 
+agricultural guidance, making it difficult to identify diseases at the right time. 
+Another major issue is the lack of a centralized platform where farmers can not only detect diseases 
+but also receive medicine recommendations, dosage information, nearby supplier details, 
+educational resources, and continuous support. Farmers often struggle to find suitable medicines 
+and trusted suppliers after identifying crop diseases. 
+There is also a need for a secure and organized system to manage farmers, suppliers, stores, 
+medicines, and agricultural data efficiently. Existing systems generally focus only on disease 
+prediction and do not provide complete agricultural support services. 
+To address these challenges, the AI-Based Crop Disease Detection System was developed. The system 
+uses Artificial Intelligence and Deep Learning techniques to detect crop diseases from leaf images 
+accurately and efficiently. It also provides medicine recommendations, supplier store suggestions, 
+prediction history, analytics dashboards, educational content, and chatbot support through a single 
+integrated platform. 
+The proposed system aims to improve farming efficiency, reduce crop losses, and support smart 
+agriculture practices by combining machine learning with modern web technologies. 
+3.3 Objectives 
+The key objectives of this project are as follows: 
+• To develop an AI-powered crop disease detection system using CNN and MobileNet 
+architecture.  
+• To provide accurate disease prediction from uploaded crop leaf images.  
+• To create a secure farmer registration system with KYC verification and admin approval.  
+• To develop a supplier module for registering stores and managing medicines with dosage 
+information.  
+• To suggest nearby medicine stores and recommended medicines to farmers after disease 
+prediction.  
+• To maintain prediction history and analytics dashboards for farmers.  
+• To integrate an AI chatbot using Hugging Face API for assisting users with agriculture-related 
+queries.  
+
+
+--- PAGE 22 ---
+ 
+16 
+ 
+• To provide educational resources such as disease libraries, videos, FAQs, and informational 
+content for farmers.  
+• To build a centralized admin panel for managing users, suppliers, stores, medicines, and 
+platform activities.  
+• To support smart agriculture and improve farming efficiency using Artificial Intelligence and 
+digital technologies. 
+3.4 Proposed System Architecture 
+The proposed AI-Based Crop Disease Detection System is designed as a full-stack web application 
+that integrates Artificial Intelligence, Machine Learning, frontend technologies, backend APIs, and 
+database management into a single platform. The system architecture consists of three major 
+modules: Farmer Module, Supplier Module, and Admin Panel, all connected through a centralized 
+backend system. 
+The architecture of the system is divided into the following main components: 
+1. Frontend Layer 
+The frontend of the application was developed using ReactJS along with HTML, CSS, and JavaScript. It 
+provides an interactive and user-friendly interface for farmers, suppliers, and administrators. 
+The frontend allows users to: 
+• Register and login into the system  
+• Upload crop leaf images  
+• View disease prediction results  
+• Access prediction history and analytics  
+• Manage profiles and KYC information  
+• View medicine recommendations and supplier details  
+• Access disease libraries, videos, and FAQs  
+• Interact with the AI chatbot  
+The frontend communicates with the backend using REST APIs. 
+2. Backend Layer 
+The backend of the application was developed using FastAPI, a high-performance Python framework 
+used for API development. The backend acts as the bridge between the frontend interface, machine 
+learning model, and database. 
+The backend performs the following tasks: 
+• User authentication and authorization  
+• Farmer KYC verification handling  
+• Supplier and medicine management  
+• Image processing and disease prediction  
+
+
+--- PAGE 23 ---
+ 
+17 
+ 
+• API request handling  
+• Prediction history management  
+• Admin control operations  
+• Chatbot API integration using Hugging Face API  
+The backend receives uploaded crop images from the frontend, preprocesses them, and sends them 
+to the trained CNN model for prediction. 
+3. Machine Learning Layer 
+The Machine Learning layer is responsible for disease detection and prediction. A Convolutional 
+Neural Network (CNN) model based on MobileNet architecture was used for image classification. 
+The ML layer performs: 
+• Image preprocessing  
+• Feature extraction  
+• Disease classification  
+• Prediction generation  
+Transfer learning was implemented using the MobileNet pre-trained model to improve accuracy and 
+reduce training time. The trained model was integrated with the FastAPI backend for real-time 
+predictions. 
+4. Database Layer 
+The database stores all application-related information such as: 
+• Farmer details  
+• Supplier information  
+• KYC records  
+• Store details  
+• Medicines and dosage information  
+• Prediction history  
+• Admin records  
+The database helps in maintaining secure and organized data management throughout the system. 
+5. Admin Panel 
+The Admin Panel acts as the centralized management system of the application. The admin has full 
+control over the platform and manages: 
+• Farmer approvals  
+• Supplier registrations  
+• Store management  
+
+
+--- PAGE 24 ---
+ 
+18 
+ 
+• Medicine management  
+• User activities  
+• Prediction monitoring  
+The admin panel ensures proper verification and smooth functioning of the complete system. 
+6. Chatbot Integration 
+An AI chatbot was integrated using the Hugging Face free API to assist users with agriculture-related 
+queries. The chatbot provides quick responses, guidance, and basic information related to crop 
+diseases and farming support. 
+The proposed architecture creates a scalable, secure, and intelligent agricultural support system 
+capable of providing real-time crop disease detection and related services through a single integrated 
+platform. 
+ 
+3.5 Datasets Used 
+ 
+Dataset collection and preprocessing are important steps in developing an accurate and efficient 
+machine learning model. In this project, the dataset used for training the crop disease detection 
+model was collected from Kaggle, an online platform that provides datasets for machine learning and 
+data science projects. 
+The dataset consisted of images of healthy and diseased crop leaves belonging to different plant 
+categories. These images contained various disease patterns, color changes, spots, and texture 
+variations that helped the model learn disease characteristics effectively. 
+The collected dataset included: 
+• Healthy crop leaf images  
+• Diseased crop leaf images  
+• Multiple disease categories for classification  
+ 
+Before training the model, several preprocessing steps were performed to improve the quality and 
+consistency of the dataset. 
+
+
+
+--- PAGE 25 ---
+ 
+19 
+ 
+Image Resizing 
+All images were resized to a fixed dimension suitable for the MobileNet model. This ensured 
+uniformity in image input size during model training. 
+Image Normalization 
+Pixel values of images were normalized to improve model performance and speed up the training 
+process. Normalization helps the neural network process image data more efficiently. 
+Data Cleaning 
+Unnecessary or low-quality images were removed from the dataset to improve prediction accuracy 
+and reduce training errors. 
+Data Augmentation 
+Data augmentation techniques such as rotation, flipping, zooming, and shifting were applied to 
+increase dataset diversity and prevent overfitting. This helped the model generalize better on unseen 
+images. 
+Dataset Splitting 
+The dataset was divided into: 
+• Training Dataset  
+• Validation Dataset  
+• Testing Dataset  
+ 
+The training dataset was used to train the CNN model, while the validation and testing datasets were 
+used to evaluate model performance and accuracy. 
+The preprocessing steps helped improve the overall efficiency, accuracy, and reliability of the AI-
+Based Crop Disease Detection System. The prepared dataset was then used for training the 
+MobileNet CNN model using Google Colab with GPU support. 
+ 
+3.6 Model Training and Implementation 
+Model training and implementation are important phases in the development of the AI-Based Crop 
+Disease Detection System. In this project, a Convolutional Neural Network (CNN) model based on the 
+MobileNet architecture was trained to identify crop diseases from plant leaf images. 
+The model training process was performed using Python, TensorFlow, Keras, and Google Colab. 
+Transfer learning was implemented using the pre-trained MobileNet model to improve prediction 
+accuracy and reduce training time. Instead of training the model from scratch, the existing 
+knowledge of the MobileNet model was reused and fine-tuned according to the crop disease 
+dataset. 
+The following steps were involved in model training and implementation: 
+Dataset Preparation 
+The dataset collected from Kaggle was first preprocessed using image resizing, normalization, and 
+augmentation techniques. The dataset was then divided into training, validation, and testing sets. 
+
+
+--- PAGE 26 ---
+ 
+20 
+ 
+Loading the Pre-trained Model 
+The MobileNet pre-trained model was imported using TensorFlow and Keras libraries. Initial layers of 
+the model were frozen to preserve previously learned image features. 
+Adding Custom Layers 
+Additional dense and classification layers were added to the MobileNet architecture according to the 
+disease categories in the dataset. These layers helped the model classify crop diseases accurately. 
+Model Training 
+The model was trained using the training dataset over multiple epochs. During training, the model 
+learned disease-related patterns such as leaf spots, discoloration, texture variations, and infected 
+regions. 
+Performance Evaluation 
+After training, the model was evaluated using validation and testing datasets. Accuracy and loss 
+graphs were analyzed to measure the performance and efficiency of the model. 
+Model Saving and Integration 
+The trained model was saved and integrated with the FastAPI backend. The backend loaded the 
+model and used it for real-time disease prediction whenever users uploaded crop leaf images 
+through the frontend application. 
+The trained CNN model successfully identified crop diseases with good accuracy and played a major 
+role in building an intelligent and reliable crop disease detection system. 
+ 
+3.7 Disease Detection Overflow 
+ 
+The disease detection workflow describes the complete process followed by the system to 
+detect crop diseases from uploaded leaf images. The workflow combines frontend 
+
+
+
+--- PAGE 27 ---
+ 
+21 
+ 
+interaction, backend processing, and machine learning prediction into a single automated 
+system. 
+The workflow of the system is as follows: 
+Step 1: Farmer Registration and Login 
+The farmer first registers on the platform by providing required details and uploading KYC 
+documents. The admin verifies the KYC information and approves the account. After 
+approval, the farmer can log in to the system. 
+Step 2: Uploading Crop Image 
+After login, the farmer uploads an image of the crop leaf through the ReactJS frontend 
+interface. The image is sent to the FastAPI backend through API requests. 
+Step 3: Image Preprocessing 
+The backend preprocesses the uploaded image by resizing and normalizing it according to 
+the input requirements of the MobileNet CNN model. 
+Step 4: Disease Prediction 
+The preprocessed image is passed to the trained CNN model. The model analyzes the image 
+features and predicts the disease category based on learned patterns from the training 
+dataset. 
+Step 5: Displaying Prediction Result 
+The prediction result is returned from the backend in JSON format and displayed on the 
+frontend interface. The system shows: 
+• Detected disease name  
+• Confidence or prediction result  
+• Recommended medicines  
+• Dosage information  
+• Nearby supplier stores (if available)  
+ 
+Step 6: Prediction History Storage 
+The prediction details are stored in the database so that farmers can access previous 
+predictions through the prediction history section. 
+Step 7: Additional Support Features 
+Farmers can also access: 
+• Analytics dashboard  
+• Disease library  
+• Informational videos  
+• FAQs section  
+• AI chatbot assistance  
+
+
+--- PAGE 28 ---
+ 
+22 
+ 
+ 
+The workflow provides a complete and user-friendly process for automated crop disease 
+identification and agricultural support. 
+ 
+3.8 Frontend Design and User Interface 
+The frontend of the AI-Based Crop Disease Detection System was designed using ReactJS along with 
+HTML, CSS, and JavaScript. The main objective of the frontend design was to create a responsive, 
+interactive, and user-friendly interface that could be easily used by farmers, suppliers, and 
+administrators. 
+The application interface was designed with simple navigation and organized layouts to improve 
+accessibility and user experience. Different dashboards and pages were created according to user 
+roles such as Farmer, Supplier, and Admin. 
+Farmer Interface 
+The farmer dashboard included features such as: 
+• Farmer registration and login  
+• KYC document upload  
+• Crop image upload for disease prediction  
+• Prediction result display  
+• Prediction history  
+• Analytics dashboard  
+• Disease library  
+• Informational videos  
+• FAQs section  
+• Farmer profile management  
+• AI chatbot support  
+The interface was designed to make image uploading and result viewing simple and efficient for 
+users. 
+Supplier Interface 
+The supplier dashboard allowed suppliers to: 
+• Register medicine stores  
+• Add medicines and dosage information  
+• Manage medicine records  
+• Update store details  
+This module helped connect farmers with nearby medicine suppliers after disease prediction. 
+
+
+--- PAGE 29 ---
+ 
+23 
+ 
+Admin Panel Interface 
+The admin panel provided controls for: 
+• Farmer approval and management  
+• Supplier verification  
+• Store and medicine management  
+• User monitoring  
+• Overall platform administration  
+ 
+The frontend design used responsive layouts to ensure compatibility across different devices such as 
+desktops, tablets, and mobile phones. Interactive components and dynamic rendering in ReactJS 
+improved application performance and user interaction. 
+Overall, the frontend design and user interface played a significant role in making the system 
+accessible, organized, and easy to use for all users of the platform. 
+ 
+3.9 API Development using FastAPI 
+FastAPI was used as the backend framework for developing APIs in the AI-Based Crop Disease 
+Detection System. It acted as the communication bridge between the ReactJS frontend, machine 
+learning model, and database. FastAPI is a modern and high-performance Python framework known 
+for its speed, simplicity, and efficient API handling capabilities. 
+In this project, REST APIs were developed to handle different system functionalities such as user 
+authentication, image upload, disease prediction, medicine management, supplier management, and 
+admin operations. The APIs allowed smooth data exchange between different modules of the 
+application. 
+The FastAPI backend performed the following major tasks: 
+• Handling farmer, supplier, and admin login requests  
+• Managing farmer registration and KYC verification  
+• Receiving uploaded crop leaf images from the frontend  
+• Preprocessing images before prediction  
+• Connecting with the trained CNN MobileNet model  
+• Returning prediction results to the frontend  
+• Managing medicine and supplier information  
+• Storing prediction history and user records  
+• Integrating chatbot support using Hugging Face API  
+ 
+
+
+--- PAGE 30 ---
+ 
+24 
+ 
+When a farmer uploaded a crop leaf image, the FastAPI server processed the image and passed it to 
+the trained machine learning model for disease prediction. The prediction result was then returned 
+to the React frontend in JSON format. 
+FastAPI also provided automatic API documentation using Swagger UI, which helped in testing and 
+verifying API endpoints during development. The framework ensured fast response time, smooth 
+frontend-backend integration, and efficient handling of real-time prediction requests. 
+Overall, FastAPI played an important role in building a scalable, reliable, and high-performance 
+backend system for the project. 
+3.10 Testing and Results 
+Testing is an essential phase of software development that ensures the system works correctly, 
+efficiently, and reliably. In the AI-Based Crop Disease Detection System, various testing methods were 
+performed to evaluate both the application functionality and machine learning model performance. 
+The frontend, backend APIs, database operations, and machine learning model were tested during 
+development. Functional testing was performed to verify features such as: 
+• Farmer registration and login  
+• KYC upload and approval  
+• Supplier registration and medicine management  
+• Crop image upload  
+• Disease prediction functionality  
+• Prediction history storage  
+• Analytics dashboard  
+• Chatbot response handling  
+• Admin management operations  
+ 
+The machine learning model was tested using validation and testing datasets to evaluate prediction 
+accuracy and performance. Accuracy and loss graphs were analyzed during training to monitor the 
+learning performance of the CNN MobileNet model. 
+The system successfully detected crop diseases from uploaded plant leaf images and generated 
+prediction results with good accuracy. The backend APIs processed requests efficiently and returned 
+results in real time. Medicine recommendations and nearby supplier store suggestions were also 
+displayed successfully after prediction. 
+The frontend interface functioned smoothly and provided a user-friendly experience for farmers, 
+suppliers, and administrators. The chatbot feature also responded effectively to basic agriculture-
+related queries. 
+
+
+--- PAGE 31 ---
+ 
+25 
+ 
+The overall testing results showed that the system was stable, efficient, and capable of providing 
+accurate crop disease detection and agricultural support services through a single integrated 
+platform. 
+3.11 Advantages of the Proposed System 
+The AI-Based Crop Disease Detection System provides several advantages over traditional crop 
+disease identification methods. The integration of Artificial Intelligence, Machine Learning, and full-
+stack web technologies makes the system efficient, accurate, and user-friendly. 
+The major advantages of the proposed system are as follows: 
+• Provides quick and accurate crop disease detection using AI and CNN models.  
+• Reduces dependency on manual disease identification methods and agricultural experts.  
+• Helps farmers detect diseases at an early stage and take preventive measures on time.  
+• Suggests suitable medicines and dosage information after disease prediction.  
+• Displays nearby registered supplier stores for easy medicine availability.  
+• Maintains prediction history and analytics for better monitoring and analysis.  
+• Provides educational support through disease libraries, videos, and FAQs.  
+• Includes AI chatbot assistance for answering agriculture-related queries.  
+• Supports secure farmer registration with KYC verification and admin approval.  
+• Provides centralized management of users, suppliers, medicines, and stores through the 
+admin panel.  
+• Offers a responsive and user-friendly interface for all users.  
+• Promotes smart farming and digital agriculture solutions using modern technologies.  
+• Saves time, improves efficiency, and helps reduce crop losses caused by diseases. 
+ 
+3.12 Future Scope and Enhancements 
+The AI-Based Crop Disease Detection System has significant future scope in the field of smart 
+agriculture and digital farming. Although the current system successfully detects crop diseases and 
+provides medicine recommendations, several advanced features and improvements can be added in 
+the future to make the platform more intelligent, scalable, and beneficial for farmers. 
+Some possible future enhancements of the system are as follows: 
+• Expanding the dataset to include more crop varieties and disease categories for improved 
+prediction accuracy.  
+• Implementing real-time disease detection using live camera functionality in mobile devices.  
+• Developing a dedicated mobile application for easier accessibility among farmers.  
+
+
+--- PAGE 32 ---
+ 
+26 
+ 
+• Adding multilingual support so that farmers from different regions can use the application 
+comfortably.  
+• Integrating weather forecasting and environmental monitoring systems for better agricultural 
+analysis.  
+• Providing fertilizer recommendations and crop care suggestions along with disease 
+prediction.  
+• Enhancing the AI chatbot with advanced Natural Language Processing (NLP) capabilities for 
+better interaction and guidance.  
+• Integrating GPS and map-based services for locating nearby medicine suppliers more 
+accurately.  
+• Implementing cloud deployment and scalable infrastructure for handling larger numbers of 
+users.  
+• Adding notification and alert systems for disease updates and medicine availability.  
+• Improving the analytics dashboard with advanced data visualization and reporting features.  
+• Integrating IoT sensors and smart farming technologies for automated crop monitoring in the 
+future.  
+These enhancements can help transform the system into a more comprehensive agricultural support 
+platform capable of improving farming efficiency and promoting smart agriculture practices on a 
+larger scale. 
+ 
+3.13 Government Improvement Initiative and Impact 
+The AI-Based Crop Disease Detection System supports government initiatives focused on improving 
+agriculture through digital transformation and smart farming technologies. The project aims to assist 
+farmers by providing faster disease detection, medicine recommendations, educational resources, 
+and technological support through a single integrated platform. 
+The system contributes toward improving agricultural productivity by helping farmers identify crop 
+diseases at an early stage and take timely preventive measures. Early disease detection can reduce 
+crop damage, improve crop quality, and minimize financial losses faced by farmers. 
+The project was also demonstrated as part of a government improvement initiative related to 
+agriculture and farmer welfare. The application promotes the use of Artificial Intelligence and 
+Machine Learning in agriculture, aligning with modern digital farming approaches encouraged by 
+government programs. 
+The inclusion of features such as: 
+• KYC-based farmer verification  
+• Medicine recommendation system  
+• Nearby supplier support  
+• Disease awareness resources  
+
+
+--- PAGE 33 ---
+ 
+27 
+ 
+• Analytics dashboard  
+• AI chatbot assistance  
+helps create a more organized and farmer-friendly agricultural ecosystem. 
+The project can positively impact farmers by: 
+• Improving accessibility to agricultural support  
+• Reducing dependency on manual disease inspection  
+• Providing faster and more accurate solutions  
+• Increasing awareness about crop diseases and treatments  
+• Encouraging the adoption of digital technologies in farming  
+Overall, the system demonstrates how modern technologies such as AI, Machine Learning, and web 
+applications can be effectively used to support smart agriculture and contribute toward agricultural 
+development initiatives. 
+ 
+3.14 Conclusion 
+The AI-Based Crop Disease Detection System was successfully developed as a smart agricultural 
+solution using Artificial Intelligence, Machine Learning, FastAPI, ReactJS, and MobileNet architecture. 
+The project demonstrated the practical implementation of deep learning techniques for identifying 
+crop diseases from plant leaf images accurately and efficiently. 
+The system provides a complete platform for farmers, suppliers, and administrators by integrating 
+disease prediction, medicine recommendations, supplier management, analytics dashboards, 
+educational resources, and chatbot assistance into a single web application. The use of CNN and 
+transfer learning improved the prediction accuracy and overall efficiency of the system. 
+During the development process, valuable practical experience was gained in machine learning 
+model training, API development, frontend-backend integration, database handling, and full-stack 
+web application development. Working on client projects and maintenance tasks during the 
+internship also improved technical, communication, and teamwork skills. 
+The project successfully addressed the problem of manual crop disease identification by providing an 
+automated and user-friendly solution for farmers. It also highlighted the importance of Artificial 
+Intelligence in modern agriculture and demonstrated how smart technologies can help improve 
+farming practices and agricultural productivity. 
+Overall, the project achieved its objectives successfully and proved to be an effective step toward 
+promoting smart agriculture and digital farming solutions. 
+ 
+ 
+CHAPTER 4 – DIAGRAMS AND SCREENSHOTS 
+4.1 Data Flow Diagrams 
+
+
+--- PAGE 34 ---
+ 
+28 
+ 
+The Data Flow Diagram (DFD) represents the flow of information within the AI-Based Crop Disease 
+Detection System. It illustrates how data moves between farmers, suppliers, admin, frontend 
+interface, backend APIs, database, and the machine learning model. 
+The DFD shows the following major processes: 
+• Farmer registration and KYC verification  
+• Crop image upload and disease prediction  
+• Medicine and supplier management  
+• Prediction result generation  
+• Data storage and retrieval  
+• Admin management and monitoring  
+The diagram helps in understanding the interaction between different modules and the overall data 
+processing workflow of the system. 
+ 
+ 
+
+
+
+--- PAGE 35 ---
+ 
+29 
+ 
+ 
+ 
+4.2 System Architecture Diagram 
+The System Architecture Diagram represents the overall structure and organization of the AI-Based 
+Crop Disease Detection System. It illustrates how different components of the application are 
+connected and communicate with each other. 
+The architecture mainly includes: 
+• ReactJS Frontend  
+• FastAPI Backend  
+• CNN MobileNet Model  
+• Database System  
+• Farmer, Supplier, and Admin Modules  
+• Hugging Face Chatbot API  
+The diagram explains the communication between frontend and backend, image processing flow, 
+machine learning prediction process, and database interactions within the application. 
+ 
+4.3 CNN Workflow Diagram 
+The CNN Workflow Diagram illustrates the working process of the Convolutional Neural Network 
+used for crop disease detection. It shows how uploaded crop leaf images are processed and classified 
+by the deep learning model. 
+The workflow includes: 
+• Image input  
+• Image preprocessing  
+
+
+
+--- PAGE 36 ---
+ 
+30 
+ 
+• Feature extraction using convolution layers  
+• Pooling operations  
+• Disease classification  
+• Prediction output  
+The diagram helps in understanding how the CNN model analyzes leaf images and predicts crop 
+diseases accurately using deep learning techniques. 
+ 
+ 
+ 
+4.4 Frontend Screenshots 
+FARMER MODULE 
+ 
+LOGIN PAGE 
+ 
+HOME PAGE 
+
+
+
+--- PAGE 37 ---
+ 
+31 
+ 
+ 
+DASHBOARD 
+ 
+ 
+AI DIAGNOSIS RESULT 
+ 
+ 
+PREDICTION HISTORY 
+ 
+
+
+
+--- PAGE 38 ---
+ 
+32 
+ 
+ 
+PLANT DISEASE LIBRARY 
+ 
+VIDEO LEARNING CENTRE 
+ 
+ 
+
+
+
+--- PAGE 39 ---
+ 
+33 
+ 
+The AI-Based Crop Disease Detection System includes various user-friendly features to improve 
+accessibility and user experience. The application supports multilingual functionality, allowing 
+farmers to use the platform in different languages comfortably. 
+Additional features such as profile management, analytics dashboard, FAQ/Help section, About Us 
+page, and AI chatbot support help users easily access information and navigate the system efficiently. 
+These features make the platform more interactive, informative, and suitable for smart agriculture 
+solutions. 
+ 
+ 
+SUPPLIER MODULE 
+ 
+LOGIN PAGE 
+ 
+ 
+HOME PAGE 
+ 
+
+
+
+--- PAGE 40 ---
+ 
+34 
+ 
+ 
+MY SHOPS 
+ 
+VIEW SHOPS PAGE 
+
+
+
+--- PAGE 41 ---
+ 
+35 
+ 
+ 
+ADD SHOP PAGE 
+ 
+ 
+ 
+ 
+ADMIN MODULE 
+ 
+
+
+
+--- PAGE 42 ---
+ 
+36 
+ 
+LOGIN PAGE 
+ 
+DASHBOARD 
+ 
+MANAGE USERS 
+
+
+
+--- PAGE 43 ---
+ 
+37 
+ 
+ 
+MANAGE SHOPS 
+ 
+MANAGE MEDICINES 
+ 
+MANAGE SUPPLIERS 
+
+
+
+--- PAGE 44 ---
+ 
+38 
+ 
+ 
+MANAGE PREDICTIONS 
+ 
+MANAGE DISEASES 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+--- PAGE 45 ---
+ 
+39 
+ 
+CHAPTER 5 : RESEARCH PAPERS AND APPENDIX 
+5.1 Research Papers and References 
+ 
+The development of the AI-Based Crop Disease Detection System involved studying various research 
+papers, online resources, documentation, and machine learning references related to Artificial 
+Intelligence, Deep Learning, crop disease detection, and full-stack web development. 
+ 
+The following resources and technologies were referred to during the project development: 
+• Research papers related to crop disease detection using CNN and Deep Learning.  
+• TensorFlow and Keras official documentation.  
+• FastAPI official documentation.  
+• ReactJS official documentation.  
+• MobileNet architecture research and implementation guides.  
+• Kaggle crop disease image datasets.  
+• Google Colab documentation and tutorials.  
+• Hugging Face API documentation for chatbot integration.  
+• Machine Learning and Deep Learning tutorials and educational resources.  
+ 
+These references helped in understanding model development, API integration, frontend-backend 
+communication, and implementation of AI technologies in agriculture. 
+ 
+5.2 Final Conclusion 
+The AI-Based Crop Disease Detection System was successfully developed as an intelligent and user-
+friendly agricultural platform using Artificial Intelligence, Machine Learning, FastAPI, ReactJS, and 
+MobileNet architecture. The project effectively demonstrated how modern technologies can be used 
+to solve real-world agricultural problems and support smart farming practices. 
+The system provides accurate crop disease detection through image-based prediction using a CNN 
+model and also offers additional support features such as medicine recommendations, supplier store 
+suggestions, analytics dashboards, disease libraries, informational videos, and AI chatbot assistance. 
+The integration of Farmer, Supplier, and Admin modules helped in creating a complete and organized 
+agricultural support system. 
+During the development of the project, valuable practical knowledge was gained in machine learning 
+model training, transfer learning, API development, frontend-backend integration, database 
+management, and full-stack web application development. Working under team leads and 
+contributing to client projects during the internship also improved professional, technical, and 
+problem-solving skills. 
+The project successfully achieved its objectives by providing an efficient, secure, and scalable 
+platform for automated crop disease identification and farmer support. It highlights the growing 
+importance of Artificial Intelligence in agriculture and demonstrates the potential of digital 
+technologies in improving farming efficiency and reducing crop losses. 
+Overall, the project proved to be a significant learning experience and an effective step toward 
+promoting smart agriculture and technology-driven farming solutions. 
+. 
+ 
+ 
