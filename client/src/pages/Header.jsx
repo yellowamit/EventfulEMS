@@ -63,7 +63,7 @@ export default function Header() {
       <header className='sticky top-0 z-20 flex justify-between place-items-center border-b border-slate-200 bg-white/90 px-6 py-2 backdrop-blur sm:px-6'>
           
           <Link to={'/'} className="flex item-center ">
-            <img src="../src/assets/logo.png" alt="" className='w-26 h-9'/>
+            <img src="./src/assets/logo.png" alt="" className='w-26 h-9'/>
           </Link>
           <div  className='flex bg-white rounded py-2.5 px-4 w-1/3 gap-4 items-center shadow-md shadow-gray-200'>
             
