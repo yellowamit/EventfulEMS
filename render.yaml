@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: eventfulems
+    env: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGO_DB_NAME
+        value: eventfulems
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: PORT
+        value: 4000

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-background: #fafafa;
@@ -13,12 +14,6 @@ body{
   background-color: #fafafa;
   font-family: Poppins;
   color: #0f172a;
-  transition: background-color 180ms ease, color 180ms ease;
-}
-
-.dark body{
-  background-color: #020617;
-  color: #e2e8f0;
 }
 
 button.primary{

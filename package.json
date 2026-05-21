@@ -1,0 +1,19 @@
+{
+  "name": "eventfulems",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "api",
+    "client"
+  ],
+  "scripts": {
+    "build:client": "npm run build --workspace=client",
+    "build": "npm install --include=dev && npm run build --workspace=client",
+    "start": "npm start --workspace=api",
+    "dev": "node run-dev.js",
+    "render-build": "npm run build"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}

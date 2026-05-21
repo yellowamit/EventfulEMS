@@ -1,30 +1,29 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { AiFillCalendar } from "react-icons/ai";
 import { MdLocationPin, MdDelete } from "react-icons/md";
+import { apiUrl } from "../utils/api";
+import { eventImageUrl } from "../utils/media";
+import { UserContext } from "../UserContext";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 export default function MyEventsPage() {
   const [myEvents, setMyEvents] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [eventToDelete, setEventToDelete] = useState(null);
+  const [message, setMessage] = useState(null);
+  const { user, loading: userLoading } = useContext(UserContext);
+  const location = useLocation();
 
-  // ✅ Fetch logged-in user first
   useEffect(() => {
-    axios.get("/profile").then(response => {
-      if (!response.data) {
-        navigate("/login"); // redirect if not logged in
-        return;
-      }
-      setCurrentUser(response.data);
-    }).catch(() => navigate("/login"));
-  }, []);
+    if (userLoading) return;
+    if (!user?._id) {
+      setLoading(false);
+      return;
+    }
 
-  // ✅ Fetch events belonging to this user once we have their ID
-  useEffect(() => {
-    if (!currentUser) return;
-    axios.get(`/events/user/${currentUser._id}`)
+    axios.get(`/events/user/${user._id}`)
       .then(response => {
         setMyEvents(response.data);
         setLoading(false);
@@ -33,28 +32,28 @@ export default function MyEventsPage() {
         console.error("Error fetching my events:", error);
         setLoading(false);
       });
-  }, [currentUser]);
+  }, [user, userLoading]);
 
-  async function handleDelete(eventId) {
-    const confirmed = window.confirm("Are you sure you want to delete this event?");
-    if (!confirmed) return;
+  async function handleDelete() {
+    if (!eventToDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:4000/event/${eventId}`, {
+      const response = await fetch(apiUrl(`/event/${eventToDelete._id}`), {
         method: "DELETE",
         credentials: "include",
       });
 
       const data = await response.json();
       if (response.ok) {
-        // ✅ Remove deleted event from state without refetching
-        setMyEvents(prev => prev.filter(event => event._id !== eventId));
+        setMyEvents(prev => prev.filter(event => event._id !== eventToDelete._id));
+        setMessage({ type: "success", text: `${eventToDelete.title} was deleted.` });
+        setEventToDelete(null);
       } else {
-        alert("Failed to delete: " + data.error);
+        setMessage({ type: "error", text: data.error || "Failed to delete the event." });
       }
     } catch (error) {
       console.error("Error deleting event:", error);
-      alert("Something went wrong.");
+      setMessage({ type: "error", text: "Something went wrong while deleting the event." });
     }
   }
 
@@ -66,10 +65,22 @@ export default function MyEventsPage() {
     );
   }
 
+  if (!user) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
   return (
     <div className="flex flex-col mx-5 xl:mx-32 md:mx-10 mt-8">
+      <ConfirmDialog
+        open={!!eventToDelete}
+        title="Delete event?"
+        message={`This will permanently delete "${eventToDelete?.title}". Tickets already sold for this event may still exist in attendee wallets.`}
+        confirmText="Delete"
+        danger
+        onConfirm={handleDelete}
+        onCancel={() => setEventToDelete(null)}
+      />
 
-      {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-extrabold">My Events</h1>
         <Link to="/createEvent">
@@ -77,7 +88,16 @@ export default function MyEventsPage() {
         </Link>
       </div>
 
-      {/* Empty state */}
+      {message && (
+        <div className={`mb-6 rounded-lg border p-4 font-semibold ${
+          message.type === "success"
+            ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+            : "border-red-200 bg-red-50 text-red-700"
+        }`}>
+          {message.text}
+        </div>
+      )}
+
       {myEvents.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64 gap-4 text-gray-400">
           <p className="text-xl font-semibold">You haven&apos;t created any events yet.</p>
@@ -92,11 +112,10 @@ export default function MyEventsPage() {
               key={event._id}
               className="flex flex-col md:flex-row gap-4 border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
             >
-              {/* Event Image */}
               <div className="w-full md:w-48 h-36 flex-shrink-0">
                 {event.image ? (
                   <img
-                    src={`http://localhost:4000/${event.image}`}
+                    src={eventImageUrl(event.image)}
                     alt={event.title}
                     className="w-full h-full object-cover rounded-lg"
                   />
@@ -107,14 +126,13 @@ export default function MyEventsPage() {
                 )}
               </div>
 
-              {/* Event Details */}
               <div className="flex flex-col flex-grow gap-2">
                 <h2 className="text-xl font-extrabold">{event.title.toUpperCase()}</h2>
 
                 <div className="flex items-center gap-2 text-sm text-gray-500">
                   <AiFillCalendar className="text-primarydark" />
                   <span>{event.eventDate?.split("T")[0]}</span>
-                  <span>·</span>
+                  <span>-</span>
                   <span>{event.eventTime}</span>
                 </div>
 
@@ -124,17 +142,15 @@ export default function MyEventsPage() {
                 </div>
 
                 <div className="text-sm font-semibold text-primarydark">
-                  {event.ticketPrice === 0 ? "Free" : `LKR. ${event.ticketPrice}`}
+                  {event.ticketPrice === 0 ? "Free" : `INR. ${event.ticketPrice}`}
                 </div>
 
-                {/* Ticket stats */}
                 <div className="flex gap-4 text-sm text-gray-500 mt-1">
-                  <span>🎟 Tickets sold: <strong>{event.Count || 0}</strong></span>
-                  <span>👥 Capacity: <strong>{event.Participants || 0}</strong></span>
+                  <span>Tickets sold: <strong>{event.Count || 0}</strong></span>
+                  <span>Capacity: <strong>{event.Participants || event.Quantity || 0}</strong></span>
                 </div>
               </div>
 
-              {/* Action Buttons */}
               <div className="flex md:flex-col gap-2 justify-end md:justify-start flex-shrink-0">
                 <Link to={`/event/${event._id}`}>
                   <button className="w-full px-4 py-2 border rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">
@@ -143,7 +159,7 @@ export default function MyEventsPage() {
                 </Link>
 
                 <button
-                  onClick={() => handleDelete(event._id)}
+                  onClick={() => setEventToDelete(event)}
                   className="flex items-center justify-center gap-1 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg transition-colors"
                 >
                   <MdDelete className="h-4 w-4" />

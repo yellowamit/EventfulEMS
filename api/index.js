@@ -13,24 +13,56 @@ const Ticket = require("./models/Ticket");
 const { randomUUID } = require("crypto");
 
 const app = express();
+const api = express.Router();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
+const isProduction = process.env.NODE_ENV === "production";
+const clientDistPath = path.join(__dirname, "..", "client", "dist");
+const allowedOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const cookieOptions = {
+  httpOnly: true,
+  sameSite: isProduction ? "none" : "lax",
+  secure: isProduction,
+};
 const jwtSecret = process.env.JWT_SECRET; // ✅ From .env, never hardcoded
 
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(cookieParser());
 app.use(
-  cors({
-    credentials: true,
-    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173", // ✅ Env-based
+  cors((req, callback) => {
+    const origin = req.header("Origin");
+    const requestHost = req.get("host");
+    let originAllowed = !origin || allowedOrigins.includes(origin);
+
+    if (!originAllowed && requestHost) {
+      try {
+        originAllowed = new URL(origin).host === requestHost;
+      } catch {
+        originAllowed = false;
+      }
+    }
+
+    callback(null, {
+      origin: originAllowed ? origin : false,
+      credentials: true,
+    });
   })
 );
-
 // ✅ Serve uploaded images as static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 
 if (!process.env.MONGO_URL) {
   console.error("MONGO_URL is missing. Add it to api/.env before starting.");
+  process.exit(1);
+}
+
+if (!jwtSecret) {
+  console.error("JWT_SECRET is missing. Add it to your environment before starting.");
   process.exit(1);
 }
 
@@ -42,7 +74,7 @@ if (!fs.existsSync(uploadsDir)) {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, uploadsDir);
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + "-" + file.originalname); // ✅ Prevent filename collisions
@@ -51,11 +83,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-app.get("/test", (req, res) => {
+api.get("/test", (req, res) => {
   res.json("test ok");
 });
 
-app.post("/register", async (req, res) => {
+api.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    environment: process.env.NODE_ENV || "development",
+  });
+});
+
+api.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
   try {
     const userDoc = await UserModel.create({
@@ -69,7 +108,7 @@ app.post("/register", async (req, res) => {
       {},
       (err, token) => {
         if (err) return res.status(500).json({ error: "Failed to generate token" });
-        res.cookie("token", token).json(userDoc);
+        res.cookie("token", token, cookieOptions).json(userDoc);
       }
     );
   } catch (e) {
@@ -77,7 +116,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+api.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const userDoc = await UserModel.findOne({ email });
   if (!userDoc) return res.status(404).json({ error: "User not found" });
@@ -91,27 +130,27 @@ app.post("/login", async (req, res) => {
     {},
     (err, token) => {
       if (err) return res.status(500).json({ error: "Failed to generate token" });
-      res.cookie("token", token).json(userDoc);
+      res.cookie("token", token, cookieOptions).json(userDoc);
     }
   );
 });
 
-app.get("/profile", (req, res) => {
+api.get("/profile", (req, res) => {
   const { token } = req.cookies;
   if (!token) return res.json(null); // ✅ Early return if no token
 
   // ✅ Return error response instead of throwing
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) return res.clearCookie("token").status(401).json({ error: "Invalid token" });
+    if (err) return res.clearCookie("token", cookieOptions).status(401).json({ error: "Invalid token" });
     const userDoc = await UserModel.findById(userData.id);
-    if (!userDoc) return res.clearCookie("token").json(null);
+    if (!userDoc) return res.clearCookie("token", cookieOptions).json(null);
     const { name, email, _id } = userDoc;
     res.json({ name, email, _id });
   });
 });
 
-app.post("/logout", (req, res) => {
-  res.cookie("token", "").json(true);
+api.post("/logout", (req, res) => {
+  res.clearCookie("token", cookieOptions).json(true);
 });
 
 const eventSchema = new mongoose.Schema({
@@ -135,7 +174,7 @@ const eventSchema = new mongoose.Schema({
 
 const Event = mongoose.model("Event", eventSchema);
 
-app.post("/createEvent", upload.single("image"), async (req, res) => {
+api.post("/createEvent", upload.single("image"), async (req, res) => {
   try {
     const eventData = req.body;
     eventData.image = req.file ? `/uploads/${req.file.filename}` : "";
@@ -150,7 +189,7 @@ app.post("/createEvent", upload.single("image"), async (req, res) => {
   }
 });
 
-app.get("/createEvent", async (req, res) => {
+api.get("/createEvent", async (req, res) => {
   try {
     const events = await Event.find();
     res.status(200).json(events);
@@ -159,7 +198,7 @@ app.get("/createEvent", async (req, res) => {
   }
 });
 
-app.get("/event/:id", async (req, res) => {
+api.get("/event/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const event = await Event.findById(id);
@@ -168,7 +207,7 @@ app.get("/event/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch event from MongoDB" });
   }
 });
-app.delete("/event/:id", async (req, res) => {
+api.delete("/event/:id", async (req, res) => {
   try {
     await Event.findByIdAndDelete(req.params.id);
     res.json({ message: "Event deleted" });
@@ -177,7 +216,7 @@ app.delete("/event/:id", async (req, res) => {
   }
 });
 
-app.post("/event/:eventId", async (req, res) => {
+api.post("/event/:eventId", async (req, res) => {
   try {
     const event = await Event.findById(req.params.eventId);
     if (!event) return res.status(404).json({ message: "Event not found" });
@@ -189,7 +228,7 @@ app.post("/event/:eventId", async (req, res) => {
   }
 });
 
-app.get("/events", async (req, res) => {
+api.get("/events", async (req, res) => {
   try {
     const events = await Event.find();
     res.json(events);
@@ -198,7 +237,7 @@ app.get("/events", async (req, res) => {
   }
 });
 
-app.get("/event/:id/ordersummary", async (req, res) => {
+api.get("/event/:id/ordersummary", async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     res.json(event);
@@ -207,7 +246,7 @@ app.get("/event/:id/ordersummary", async (req, res) => {
   }
 });
 
-app.get("/event/:id/ordersummary/paymentsummary", async (req, res) => {
+api.get("/event/:id/ordersummary/paymentsummary", async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     res.json(event);
@@ -215,7 +254,7 @@ app.get("/event/:id/ordersummary/paymentsummary", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch event from MongoDB" });
   }
 });
-app.get("/events/user/:userId", async (req, res) => {
+api.get("/events/user/:userId", async (req, res) => {
   try {
     const user = await UserModel.findById(req.params.userId);
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -227,7 +266,7 @@ app.get("/events/user/:userId", async (req, res) => {
   }
 });
 
-// app.post("/tickets", async (req, res) => {
+// api.post("/tickets", async (req, res) => {
 //   try {
 //     const newTicket = new Ticket(req.body);
 //     await newTicket.save();
@@ -236,7 +275,7 @@ app.get("/events/user/:userId", async (req, res) => {
 //     return res.status(500).json({ error: "Failed to create ticket" });
 //   }
 // });
-// app.post("/tickets", async (req, res) => {
+// api.post("/tickets", async (req, res) => {
 //   try {
 //     const newTicket = new Ticket(req.body);
 //     await newTicket.save();
@@ -252,7 +291,7 @@ app.get("/events/user/:userId", async (req, res) => {
 //     return res.status(500).json({ error: "Failed to create ticket" });
 //   }
 // });
-app.post("/tickets", async (req, res) => {
+api.post("/tickets", async (req, res) => {
   try {
     const userId = req.body.userid;
     const eventId = req.body.eventid;
@@ -304,7 +343,7 @@ app.post("/tickets", async (req, res) => {
     return res.status(500).json({ error: "Failed to create ticket" });
   }
 });
-app.get("/tickets/:id", async (req, res) => {
+api.get("/tickets/:id", async (req, res) => {
   try {
     const tickets = await Ticket.find();
     res.json(tickets);
@@ -313,7 +352,7 @@ app.get("/tickets/:id", async (req, res) => {
   }
 });
 
-app.get("/tickets/user/:userId", async (req, res) => {
+api.get("/tickets/user/:userId", async (req, res) => {
   try {
     const tickets = await Ticket.find({ userid: req.params.userId });
     res.json(tickets);
@@ -322,7 +361,7 @@ app.get("/tickets/user/:userId", async (req, res) => {
   }
 });
 
-app.delete("/tickets/:id", async (req, res) => {
+api.delete("/tickets/:id", async (req, res) => {
   try {
     await Ticket.findByIdAndDelete(req.params.id);
     res.status(204).send();
@@ -332,6 +371,19 @@ app.delete("/tickets/:id", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 4000;
+
+app.use("/api", api);
+
+if (!isProduction) {
+  app.use("/", api);
+}
+
+if (isProduction && fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(clientDistPath, "index.html"));
+  });
+}
 
 // ✅ Atlas-compatible connection with timeout option
 mongoose

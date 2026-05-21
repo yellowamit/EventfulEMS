@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import { Link, Navigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import { UserContext } from '../UserContext'
 import { playTone } from '../utils/sound';
@@ -13,6 +13,8 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [message, setMessage] = useState(null);
   const {setUser} = useContext(UserContext);
+  const location = useLocation();
+  const redirectTo = location.state?.from?.pathname || '/';
 
 
   //! Fetch users from the server --------------------------------------------------------------
@@ -52,7 +54,7 @@ export default function LoginPage() {
   }
 
   if(redirect){
-    return <Navigate to={'/'}/>
+    return <Navigate to={redirectTo} replace />
   }
   
   return (
